@@ -8,7 +8,7 @@ MaruCat 依赖 MongoDB 来储存所有的服务数据。
 
 在开发机器上搭建 MongoDB 环境。
 
-**在 macOS 上搭建 MongoDB 环境**
+### 在 macOS 上搭建 MongoDB 环境
 
 在官网下载 MongoDB 服务器的安装包。
 
@@ -40,7 +40,7 @@ export PATH="/Users/rick/workspaces/env/mongodb/bin:$PATH"
 
 现在我们可以在任何位置启动和关闭 MongoDB 服务了。
 
-**在 Windows 上搭建 MongoDB 环境**
+### 在 Windows 上搭建 MongoDB 环境
 
 在 Windows 上搭建 MongoDB 环境步骤基本和 macOS 一样。
 
