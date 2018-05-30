@@ -12,7 +12,8 @@ MaruCat 的服务内容包括文章内容（包含评论等关联内容）和一
 
 **依赖**
 
-MaruCat 依赖 MongoDB 作为持久化层。所有数据在 MongoDB 中持久化。
+* **MongoDB** MaruCat 依赖 MongoDB 作为持久化层。所有数据在 MongoDB 中持久化。
+* **Flask** MaruCat 使用 Flask 微服务框架提供 REST 风格 API 服务。
 
 ## MaruCat 在 Blog 整体中的位置
 
