@@ -1,14 +1,23 @@
 # -*- encoding: utf-8 -*-
 
 from flask import Flask, make_response
-import json
+from json import dumps
+import articles
 
-app = Flask(__name__)
+
+CONTENT_TYPE = 'Content-Type'
+JSON_TYPE = 'application/json'
+
+
+app = Flask('marucat_app')
 
 
 @app.route('/')
 def hello():
-    resp = make_response(json.dumps({'message': 'Hello'}), 201)
-    resp.headers['Content-Type'] = 'application/json'
+    resp = make_response(dumps({'message': 'Hello'}), 201)
+    resp.headers[CONTENT_TYPE] = JSON_TYPE
     return resp
+
+
+app.register_blueprint(articles.bp)
 
