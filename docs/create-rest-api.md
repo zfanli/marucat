@@ -42,8 +42,6 @@ root
 为了方便调试，`run.py` 将以 DEGUB 模式启动开发服务器。
 
 ```python
-# -*- encoding: utf-8 -*-
-
 from marucat_app import app
 
 app.run(debug=True)
@@ -84,8 +82,6 @@ GET / HTTP/1.1
 这是一个最简单的例子：
 
 ```python
-# -*- encoding: utf-8 -*-
-
 from flask import Flask
 from json import dumps
 
@@ -194,8 +190,6 @@ Flask 为我们提供了一个定制 Response 对象的方法，`make_response`�
 这是修改后的代码。
 
 ```python
-# -*- encoding: utf-8 -*-
-
 from flask import Flask, make_response
 from json import dumps
 
@@ -278,7 +272,7 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 到目前为止，我们先做一个小结。
 
-我们实现了一个 Hello 场景，创建了一个最简单的问候语 API。依次来了解了 Flask 框架的基本用法，以及 REST API 的概念。
+我们实现了一个 Hello 场景，创建了一个最简单的问候语 API。依此来了解了 Flask 框架的基本用法，以及 REST API 的概念。
 
 这些内容可以总结如下：
 
