@@ -3,20 +3,22 @@
 
 """Integration"""
 
-__author__ = 'Z.Rick'
-
 from flask import Flask, make_response
 from json import dumps
+from logging import basicConfig, DEBUG
 from marucat_app.marucat_utils import CONTENT_TYPE, JSON_TYPE
 import marucat_app.articles as articles
 
-
+# logging configuration
+basicConfig(
+    level=DEBUG,
+    format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
+)
+# create flask instance with package name
 app = Flask('marucat_app')
 
-with app.app_context() as ctx:
-    ctx.pop(app.logger)
 
-
+# greeting message
 @app.route('/')
 def hello():
     resp = make_response(dumps({'message': 'Hello'}), 200)
@@ -24,4 +26,5 @@ def hello():
     return resp
 
 
+# register all APIs about articles
 app.register_blueprint(articles.bp)

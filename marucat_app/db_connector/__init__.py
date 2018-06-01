@@ -3,9 +3,10 @@
 
 """DB connector API define here"""
 
-__author__ = 'Z.Rick'
-
+from logging import getLogger
 from marucat_app.db_connector.fake_articles_connector import ArticlesConnector
+
+logger = getLogger()
 
 
 class Articles(object):
@@ -14,14 +15,15 @@ class Articles(object):
         self._connector = articles_connector
         self._logger = logger
 
-    def get_lists(self):
-        self._connector.get_lists()
-        self._logger.info('get_lists executed')
+    def get_list(self):
+        result = self._connector.get_list()
+        self._logger.info('articles/get_list is executed')
+        return result
 
 
 class ConnectorCreator(object):
     """Create connector"""
-    def __init__(self, logger):
+    def __init__(self):
         self._articles = Articles(ArticlesConnector(), logger)
 
     @property

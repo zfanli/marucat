@@ -3,18 +3,17 @@
 
 """Integration"""
 
-__author__ = 'Z.Rick'
-
-from flask import Blueprint, current_app
+from flask import Blueprint
 from marucat_app.marucat_utils import create_response
 from marucat_app.db_connector import ConnectorCreator
 
 bp = Blueprint('articles', __name__, url_prefix='/articles')
-articles_helper = ConnectorCreator(current_app.logger).articles_connector
+articles_helper = ConnectorCreator().articles_connector
 
 
 @bp.route('/list')
 def articles_list():
-    a_list = articles_helper.get_lists()
+    """Get articles list"""
+    a_list = articles_helper.get_list()
     resp = create_response(a_list, 200)
     return resp

@@ -3,8 +3,6 @@
 
 """Utils module for constants and common functions"""
 
-__author__ = 'Z.Rick'
-
 from flask import make_response
 
 CONTENT_TYPE = 'Content-Type'
