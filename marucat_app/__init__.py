@@ -7,7 +7,7 @@ from flask import Flask
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 from json import dumps
 from logging import basicConfig, DEBUG
-from marucat_app.marucat_utils import create_response
+from marucat_app.marucat_utils import response
 import marucat_app.articles as articles
 
 # logging configuration
@@ -20,10 +20,10 @@ app = Flask('marucat_app')
 
 
 @app.route('/')
+@response
 def hello():
     """A greeting when the root path was visited"""
-    resp = create_response(dumps({'message': 'Hello'}), 200)
-    return resp
+    return dumps({'message': 'Hello'}), 200
 
 
 @app.errorhandler(MethodNotAllowed)

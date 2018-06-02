@@ -6,12 +6,11 @@
 from json import dumps
 
 
-def get_list():
-    return dumps([{'id': 1, 'message': 'Hi'}, {'id': 2, 'message': 'Hello'}])
+def get_list(*, size, page):
+    return dumps([{'id': 1, 'size': size}, {'id': 2, 'page': page}])
 
 
 class ArticlesConnector(object):
     """A fake API for testing"""
     def __init__(self):
         self.get_list = get_list
-

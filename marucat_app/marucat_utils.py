@@ -4,6 +4,7 @@
 """Utils module for constants and common functions"""
 
 from flask import make_response
+from functools import wraps
 
 CONTENT_TYPE = 'Content-Type'
 JSON_TYPE = 'application/json'
@@ -15,3 +16,13 @@ def create_response(data, code=200):
     resp.headers[CONTENT_TYPE] = JSON_TYPE
     return resp
 
+
+def response(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return create_response(*func(*args, **kwargs))
+    return wrapper
+
+
+if __name__ == '__main__':
+    pass
