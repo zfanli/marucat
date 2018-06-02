@@ -64,3 +64,9 @@ MaruCat 在整个 Blog 中作为一个忠实的服务提供者存在，它的职
 ## 发布&部署
 
 待定
+
+## 相关文档
+
+* [部署 MongoDB 环境（本地环境和服务器环境）](docs/deploy-mongodb.md)
+* [在 Flask 框架创建 RESR API 的过程和疏通](docs/create-rest-api.md)
+
