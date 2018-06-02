@@ -37,29 +37,52 @@ MaruCat 在整个 Blog 中作为一个忠实的服务提供者存在，它的职
 
 ### 文章相关接口
 
-获取文章列表
+#### 获取文章列表
 
-获取文章内容
+```
+GET /articles/list
 
-获取评论
+Query parameters
+    size: the size of list
+    page: the required start position
 
-添加评论
+Example:
+    GET /articles/list?size=10&page=1
+```
 
-删除评论
+如果不给查询参数则使用默认值。
+
+```
+GET /articles/list
+```
+
+等价于下面的请求。
+
+```
+GET /articles/list?size=10&page=1
+```
+
+#### 获取文章内容
+
+#### 获取评论
+
+#### 添加评论
+
+#### 删除评论
 
 ### Pending
 
 现在不确定文章内容是否在线编辑和保存，下面的接口可能不会实装。
 
-保存文章
+#### 保存文章
 
-删除文章
+#### 删除文章
 
 ### 全局设定接口
 
-获取设定
+#### 获取设定
 
-更新设定
+#### 更新设定
 
 ## 发布&部署
 

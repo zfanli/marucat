@@ -288,7 +288,7 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 插播几个番外。
 
-**设计模式问题**
+### 设计模式问题
 
 数据库目前选择的是 MongoDB，但是也要确保以后更换数据库的情况不产生影响，所以数据库相关的部分单独提出来，放在一个子 package 里。
 
@@ -323,7 +323,7 @@ https://github.com/faif/python-patterns
 
 没有大差，但是 Python 下稍有点麻烦。不过路算是疏通路。
 
-**logging 问题**
+### logging 问题
 
 路由的绑定根据路径分成几个文件定义。
 
@@ -361,7 +361,7 @@ https://github.com/faif/python-patterns
 
 到此这条路也是被疏通了。
 
-**处理异常 Code**
+### 处理异常 Code
 
 客户端请求的一个路径可能不存在，或者请求一个路径使用的 method 可能是不被允许的。
 
