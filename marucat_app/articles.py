@@ -11,7 +11,7 @@ bp = Blueprint('articles', __name__, url_prefix='/articles')
 articles_helper = ConnectorCreator().articles_connector
 
 
-@bp.route('/list')
+@bp.route('/list',methods=['GET'])
 def articles_list():
     """Get articles list"""
     a_list = articles_helper.get_list()
