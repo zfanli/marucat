@@ -38,8 +38,8 @@ class Articles(object):
         return self._connector.get_list(size=size, page=page)
 
     @log
-    def get_content(self):
-        pass
+    def get_content(self, article_id):
+        return self._connector.get_content(article_id)
 
 
 class ConnectorCreator(object):
@@ -55,4 +55,4 @@ class ConnectorCreator(object):
 if __name__ == '__main__':
     o = ConnectorCreator()
     a = o.articles_connector
-    a.get_list(size=10, page=1)
+    print(a.get_list(size=10, page=1))

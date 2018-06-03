@@ -4,38 +4,34 @@
 """Integrate the app, register blueprints and handle errors"""
 
 from flask import Flask, jsonify
-from werkzeug.exceptions import MethodNotAllowed, NotFound
-from logging import basicConfig, DEBUG
-import marucat_app.articles as articles
-
-# logging configuration
-basicConfig(
-    level=DEBUG,
-    format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
-)
-# create flask instance with package name
-app = Flask('marucat_app')
+from logging import basicConfig, ERROR
+from marucat_app.articles import bp as articles
 
 
-@app.route('/')
-def hello():
-    """A greeting when the root path was visited"""
-    return jsonify({'message': 'Hello'}), 202
+# create flask application
+def create_app(*, level=ERROR):
 
+    # logging configuration
+    basicConfig(
+        level=level,
+        format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
+    )
 
-@app.errorhandler(MethodNotAllowed)
-def method_not_allowed(e):
-    """When method is not allowed return nothing but state code only"""
-    app.logger.warn(e)
-    return '', 405
+    app = Flask('marucat_app')
 
+    @app.route('/')
+    def hello():
+        """A greeting when the root path was visited"""
+        return jsonify({'message': 'Hello'}), 202
 
-@app.errorhandler(NotFound)
-def not_found(e):
-    """Whet the requested URL is not exist return state code only"""
-    app.logger.warn(e)
-    return '', 404
+    @app.errorhandler(404)
+    @app.errorhandler(405)
+    def method_not_allowed(e):
+        """Handler for NotFound and MethodNotAllowed"""
+        app.logger.warning('Error happened: {}'.format(e.name))
+        return '', e.code
 
+    # register blueprints
+    app.register_blueprint(articles)
 
-# register all APIs about articles
-app.register_blueprint(articles.bp)
+    return app
