@@ -3,11 +3,9 @@
 
 """Integrate the app, register blueprints and handle errors"""
 
-from flask import Flask
+from flask import Flask, jsonify
 from werkzeug.exceptions import MethodNotAllowed, NotFound
-from json import dumps
 from logging import basicConfig, DEBUG
-from marucat_app.marucat_utils import response
 import marucat_app.articles as articles
 
 # logging configuration
@@ -20,10 +18,9 @@ app = Flask('marucat_app')
 
 
 @app.route('/')
-@response
 def hello():
     """A greeting when the root path was visited"""
-    return dumps({'message': 'Hello'}), 200
+    return jsonify({'message': 'Hello'}), 202
 
 
 @app.errorhandler(MethodNotAllowed)

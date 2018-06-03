@@ -3,14 +3,19 @@
 
 """Description here"""
 
-from json import dumps
+from flask import jsonify
 
 
 def get_list(*, size, page):
-    return dumps([{'id': 1, 'size': size}, {'id': 2, 'page': page}])
+    return jsonify([{'id': 1, 'size': size}, {'id': 2, 'page': page}])
+
+
+def get_content(article_id):
+    return jsonify({'id': article_id, 'content': 'The content of article.'})
 
 
 class ArticlesConnector(object):
     """A fake API for testing"""
     def __init__(self):
         self.get_list = get_list
+        self.get_content = get_content

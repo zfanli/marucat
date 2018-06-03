@@ -82,21 +82,19 @@ GET / HTTP/1.1
 这是一个最简单的例子：
 
 ```python
-from flask import Flask
-from json import dumps
-
+from flask import Flask, jsonify
 
 app = Flask('marucat_app')
 
 
 @app.route('/')
 def hello():
-    return dumps({'message': 'Hello'})
+    return jsonify({'message': 'Hello'})
 
 
 ```
 
-我们从 flask 包中导入 Flask 类，从 json 包导入 dumps 函数。
+我们从 flask 包中导入 Flask 类和 jsonify 函数。
 
 先创建一个 Flask 对象，因为之后的操作都将围绕这个对象进行。
 
@@ -114,11 +112,11 @@ app = Flask('marucat_app')
 
 接下来创建一个 Hello 函数，直接返回问候信息。
 
-问候信息是一个 dict 数据，使用 dumps 函数将其转成 JSON 字符串再返回。
+问候信息是一个 dict 数据，使用 jsonify 函数将其转成 JSON 字符串再返回。
 
 ```python
 def hello():
-    return dumps({'message': 'Hello'})
+    return jsonify({'message': 'Hello'})
 ```
 
 最后，将 Hello 函数绑定在根路径（'/'）上，Flask 让我们可以使用装饰器的方式简单的绑定路由。
@@ -128,7 +126,7 @@ def hello():
 ```python
 @app.route('/')
 def hello():
-    return dumps({'message': 'Hello'})
+    return jsonify({'message': 'Hello'})
 ```
 
 现在，这个简单的例子已经可以运行了，来试试看！
@@ -154,7 +152,9 @@ $ python run.py
 
 ```
 $ curl http://127.0.0.1:5000/
-{"message": "Hello"}
+{
+  "message": "Hello"
+}
 ```
 
 我们打开一个新的命令行界面，使用 curl 访问服务器跟路径，接着我们就得到了预设的问候信息。
@@ -173,21 +173,21 @@ $ curl http://127.0.0.1:5000/
 
 ```
 HTTP/1.0 200 OK
-Content-Type: text/html; charset=utf-8
+Content-Type: application/json
 Content-Length: 20
 Server: Werkzeug/0.14.1 Python/3.6.4
 Date: Thu, 31 May 2018 08:24:04 GMT
 ```
 
-可以看到 Content-Type 没有像我们想象的那样声明 JSON 格式，它声明了 text/html 格式。
+可以看到我们简单的达到了目标。需要注意的是 jsonify 自动帮我们把 Content-Type 设定成了 JSON。
 
-这是因为我们使用 dumps 方法将 dict 数据转换成了 JSON 字符串，但其本质仍然是字符串。
+我们也可以手动做这一步，下面是一个例子，在没有使用 flask 的 jsonify 函数的情况下我们怎么设置 response 的头信息。
 
-服务器并不知道它是一个 JSON 数据，这时需要我们手动设置 Content-Type 内容。
+在这里我设置了 Content-Type，这只是一个例子，用这个方法我们可以设置任何想要的头信息。
 
 Flask 为我们提供了一个定制 Response 对象的方法，`make_response`。
 
-这是修改后的代码。
+先看看修改后的代码。
 
 ```python
 from flask import Flask, make_response
@@ -210,7 +210,7 @@ def hello():
 
 ```
 
-相比之前我们直接返回字符串，这次我们返回定制过的 response 对象。
+与之前不同，这次我们返回一个定制过的 response 对象。
 
 从 flask 包中导入 `make_response` 函数，这个函数可以生成一个 response 对象。
 
@@ -239,9 +239,9 @@ JSON_TYPE = 'application/json'
 resp.headers[CONTENT_TYPE] = JSON_TYPE
 ```
 
-到此基本搞定，我们再来跑跑看。如果刚才你没有关闭服务器的话，在修改代码保存之后你会看到 reload 的字眼。
+到此基本搞定，我们再来跑跑看。
 
-如果你关闭了服务器，现在重新打开它。
+重新打开服务器，如果你没有关闭的话，等服务器 reload 完成。
 
 在浏览器中打开开发者工具，访问 app 的地址根路径。
 
@@ -259,10 +259,10 @@ Server: Werkzeug/0.14.1 Python/3.6.4
 Date: Thu, 31 May 2018 09:02:34 GMT
 ```
 
-注意两点：
+注意我们通过自定义 response 的头信息实现了下面两点：
 
-1. 状态码和我们设定的一样返回了 201
-2. Content-Type 和预期一样声明了 JSON 类型
+1. 状态码返回了 201
+2. Content-Type 声明了 JSON 类型
 
 我们完成了 Hello 的需求。
 

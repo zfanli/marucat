@@ -4,7 +4,6 @@
 """Integration"""
 
 from flask import Blueprint, request
-from marucat_app.marucat_utils import response
 from marucat_app.db_connector import ConnectorCreator
 
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -12,7 +11,6 @@ articles_helper = ConnectorCreator().articles_connector
 
 
 @bp.route('/list', methods=['GET'])
-@response
 def articles_list():
     """Get a list of articles
 
@@ -30,6 +28,8 @@ def articles_list():
 
 
 @bp.route('/aid<article_id>', methods=['GET'])
-@response
 def article_content(article_id):
+    """Get the content of article by id
+    :param article_id: the id of article
+    """
     return articles_helper.get_content(article_id), 200
