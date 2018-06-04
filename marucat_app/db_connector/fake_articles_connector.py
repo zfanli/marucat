@@ -22,3 +22,11 @@ class ArticlesConnector(object):
         :param article_id: identity of article
         """
         return {'id': article_id, 'content': 'The content of article.'}
+
+    @staticmethod
+    def increase_views(article_id):
+        """increase views every times the article was visited
+
+        :param article_id: identity of article
+        """
+        return {'views': 12345, 'views_id': article_id}

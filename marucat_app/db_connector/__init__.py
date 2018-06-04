@@ -41,6 +41,10 @@ class Articles(object):
     def get_content(self, article_id):
         return self._connector.get_content(article_id)
 
+    @log
+    def increase_views(self, article_id):
+        return self._connector.increase_views(article_id)
+
 
 class ConnectorCreator(object):
     """Create connector"""

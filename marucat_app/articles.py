@@ -34,4 +34,5 @@ def article_content(article_id):
     :param article_id: the id of article
     """
     content = articles_helper.get_content(article_id)
-    return jsonify(content), 200
+    views = articles_helper.increase_views(article_id)
+    return jsonify(**content, **views), 200
