@@ -15,12 +15,14 @@ def articles_list():
     """Get a list of articles
 
     Query parameters
-        size: the size of list
-        page: the required start position
+        size: number, the size of list
+        page: number, the required start position
 
     Request without query parameters will use the default value,
     the request of GET /articles/list,
     equals to GET /articles/list?size=10&page=1
+
+    If the params is invalid then the default value was returned.
     """
     size = request.args.get('size', 10, int)
     page = request.args.get('page', 1, int)
@@ -31,7 +33,7 @@ def articles_list():
 @bp.route('/aid<article_id>', methods=['GET'])
 def article_content(article_id):
     """Get the content of article by id
-    :param article_id: the id of article
+    :param article_id: string, the id of article
     """
     content = articles_helper.get_content(article_id)
     views = articles_helper.increase_views(article_id)

@@ -43,8 +43,8 @@ MaruCat 在整个 Blog 中作为一个忠实的服务提供者存在，它的职
 GET /articles/list
 
 Query parameters
-    size: the size of list
-    page: the required start position
+    size: number, the size of list, default is 10
+    page: number, the required start position default is 1
 
 Example:
     GET /articles/list?size=10&page=1
@@ -62,7 +62,19 @@ GET /articles/list
 GET /articles/list?size=10&page=1
 ```
 
+如果参数不存在，或者存在但是值不是数字，将使用默认值继续处理。
+
 #### 获取文章内容
+
+```
+GET /articles/aid<article_id>
+
+Parameter
+    article_id: string, indentity of article
+
+Example:
+    GET /articles/aidAC1234
+```
 
 #### 获取评论
 
