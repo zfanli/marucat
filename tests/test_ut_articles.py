@@ -38,31 +38,44 @@ def test_get_list(client):
 
         # print(requested_url)
 
+        # perform request
         rv = client.get(requested_url)
+
+        # check return code
         assert 200 == rv.status_code
+        # check Content-Type
+        assert 'application/json' == rv.content_type
+        # check data
         assert [{'id': 1, 'size': e_size}, {'id': 2, 'page': e_page}] == json.loads(rv.data)
 
     # default values (size, page)
     default_val = (10, 1)
 
     # default params
-    perform_test_whit_params((), default_val)
+    # articles/list
+    perform_test_whit_params(None, default_val)
 
     # specific params
+    # articles/list?size=55&page=999
     perform_test_whit_params((55, 999), (55, 999))
 
     # error checking
     # no val provided to size
+    # articles/list?size=&page=998
     perform_test_whit_params(('', 998), (10, 998))
 
     # no val provided to page
+    # articles/list?size=1098&page=
     perform_test_whit_params((1098, ''), (1098, 1))
 
     # no val provided to both
+    # articles/list?size=&page=
     perform_test_whit_params(('', ''), default_val)
 
     # invalid val provided to size
+    # articles/list?size=abc&page=192
     perform_test_whit_params(('abc', 192), (10, 192))
 
     # invalid val provided to size
+    # articles/list?size=111&page=acb
     perform_test_whit_params((111, 'acb'), (111, 1))
