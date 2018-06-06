@@ -22,7 +22,7 @@ def articles_list():
     the request of GET /articles/list,
     equals to GET /articles/list?size=10&page=1
 
-    If the params is invalid then the default value was returned.
+    If the params are invalid, the default values will be returned.
     """
     size = request.args.get('size', 10, int)
     page = request.args.get('page', 1, int)
@@ -33,8 +33,23 @@ def articles_list():
 @bp.route('/aid<article_id>', methods=['GET'])
 def article_content(article_id):
     """Get the content of article by id
+
+    This api will get content, views, comments of the specific article
+
     :param article_id: string, the id of article
     """
     content = articles_helper.get_content(article_id)
-    views = articles_helper.increase_views(article_id)
+    views = articles_helper.update_views(article_id)
     return jsonify(**content, **views), 200
+
+
+@bp.route('/aid<article_id>/comments')
+def article_comments(article_id):
+    """get comments of specific article
+
+    :param article_id: identity of article
+    """
+    size = request.args.get('size', 10, int)
+    page = request.args.get('page', 1, int)
+    comments = articles_helper.get_comments(article_id, size)
+    return jsonify(comments), 200

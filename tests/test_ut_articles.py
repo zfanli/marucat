@@ -19,7 +19,7 @@ def client():
 def test_get_list(client):
     """get articles list"""
 
-    def perform_test_whit_params(input_val, expect_val):
+    def perform_get_list(input_val, expect_val):
         """test template"""
         # get inputted size and page
         size, page = input_val if input_val else (None, None)
@@ -53,29 +53,36 @@ def test_get_list(client):
 
     # default params
     # articles/list
-    perform_test_whit_params(None, default_val)
+    perform_get_list(None, default_val)
 
     # specific params
     # articles/list?size=55&page=999
-    perform_test_whit_params((55, 999), (55, 999))
+    perform_get_list((55, 999), (55, 999))
 
     # error checking
     # no val provided to size
     # articles/list?size=&page=998
-    perform_test_whit_params(('', 998), (10, 998))
+    perform_get_list(('', 998), (10, 998))
 
     # no val provided to page
     # articles/list?size=1098&page=
-    perform_test_whit_params((1098, ''), (1098, 1))
+    perform_get_list((1098, ''), (1098, 1))
 
     # no val provided to both
     # articles/list?size=&page=
-    perform_test_whit_params(('', ''), default_val)
+    perform_get_list(('', ''), default_val)
 
     # invalid val provided to size
     # articles/list?size=abc&page=192
-    perform_test_whit_params(('abc', 192), (10, 192))
+    perform_get_list(('abc', 192), (10, 192))
 
     # invalid val provided to size
     # articles/list?size=111&page=acb
-    perform_test_whit_params((111, 'acb'), (111, 1))
+    perform_get_list((111, 'acb'), (111, 1))
+
+
+def test_get_content(client):
+
+    def perform_get_content(article_id):
+        rv = client.get('/article/aid{}'.format(article_id))
+        assert 200 == rv.status_code

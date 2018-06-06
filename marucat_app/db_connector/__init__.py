@@ -35,15 +35,39 @@ class Articles(object):
 
     @log
     def get_list(self, *, size, page):
+        """get a list of articles
+
+        :param size: length of list
+        :param page: start position of list
+        """
         return self._connector.get_list(size=size, page=page)
 
     @log
     def get_content(self, article_id):
+        """get article content
+
+        :param article_id: identity of article
+        """
         return self._connector.get_content(article_id)
 
     @log
-    def increase_views(self, article_id):
-        return self._connector.increase_views(article_id)
+    def update_views(self, article_id):
+        """update views every times the article was visited
+
+        :param article_id: identity of article
+        """
+        return self._connector.update_views(article_id)
+
+    @log
+    def get_comments(self, article_id, *, size, page):
+        """get comments of specific article
+
+        :param article_id: identity of article
+        :param size: size of comments
+        :param page: start position
+        :return: array of comments
+        """
+        return self._connector.get_comments(article_id, size=size, page=page)
 
 
 class ConnectorCreator(object):
