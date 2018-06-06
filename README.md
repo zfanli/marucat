@@ -62,10 +62,12 @@ GET /articles/list
 GET /articles/list?size=10&page=1
 ```
 
-**错误处理**
+*错误处理*
 
-* 参数不存在 or 参数非数字：使用默认值（size：10，page：1）继续处理
-* 参数为数字 and 小于 0：无效参数，statu_code=400
+* 参数不存在 or 参数非数字：
+    * 使用默认值（size：10，page：1）继续处理
+* 参数为数字 and 小于 0：
+    * 无效参数，statu_code=400
 
 
 #### 获取文章内容
@@ -80,9 +82,10 @@ Example:
     GET /articles/aidAC1234
 ```
 
-**错误处理**
+*错误处理*
 
-* article_id 未赋值 or 资源不存在：Not Found 404
+* article_id 未赋值 or 资源不存在：
+    * Not Found 404
 
 
 #### 获取评论
