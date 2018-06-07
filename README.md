@@ -44,7 +44,7 @@ GET /articles/list
 
 Query parameters
     size: number, the size of list, default is 10
-    page: number, the required start position default is 1
+    page: number, the required start position, default is 1
 
 Example:
     GET /articles/list?size=10&page=1
@@ -62,12 +62,13 @@ GET /articles/list
 GET /articles/list?size=10&page=1
 ```
 
-*错误处理*
+*状态码*
 
-* 参数不存在 or 参数非数字：
-    * 使用默认值（size：10，page：1）继续处理
-* 参数为数字 and 小于 0：
-    * 无效参数，statu_code=400
+* 200 OK
+    * 正常
+* 400 BAD REQUEST
+    * size/page 非数值
+    * size/page 小于等于0
 
 
 #### 获取文章内容
@@ -79,34 +80,92 @@ Parameter
     article_id: string, indentity of article
 
 Example:
-    GET /articles/aidAC1234
+    GET /articles/aid123456
 ```
 
-*错误处理*
+*状态码*
 
-* article_id 未赋值 or 资源不存在：
-    * Not Found 404
+* 200 OK
+    * 正常
+* 404 NOT FOUND
+    * article id 未赋值（response 无 error 反馈）
+    * article 不存在（response 有 error 反馈）
 
 
 #### 获取评论
 
+```
+GET /articles/aid<article_id>/comments
+
+Parameter
+    article_id: string, indentity of article
+
+Query parameters
+    size: number, size of comments, default is 10
+    page: number, start position, default is 1
+
+Example:
+    GET /articles/aid123456/comment?size=10&page=1
+```
+
+*状态码*
+
+* 200 OK
+    * 正常
+* 400 BAD REQUEST
+    * size/page 非数值
+    * size/page 小于等于0
+* 404 NOT FOUND
+    * article id 未赋值（response 无 error 反馈）
+    * article 不存在（response 有 error 反馈）
+
 #### 添加评论
 
+```
+POST /articles/aid<article_id>/comments
+```
+
 #### 删除评论
+
+```
+DELETE /articles/aid<article_id>/comments
+```
 
 ### Pending
 
 现在不确定文章内容是否在线编辑和保存，下面的接口可能不会实装。
 
-#### 保存文章
+#### 更新文章
+
+```
+UPDATE /articles/aid<article_id>
+```
+
+#### 创建文章
+
+```
+POST /articles/aid<article_id>
+```
 
 #### 删除文章
+
+```
+DELETE /articles/aid<article_id>
+```
 
 ### 全局设定接口
 
 #### 获取设定
 
+```
+GET /settings
+```
+
 #### 更新设定
+
+```
+UPDATE /settings/<items>
+```
 
 ## 发布&部署
 

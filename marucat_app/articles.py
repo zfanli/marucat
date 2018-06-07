@@ -5,6 +5,8 @@
 
 from flask import Blueprint, request, jsonify
 from marucat_app.db_connector import ConnectorCreator
+from marucat_app.marucat_utils import create_error_message
+from marucat_app.runtime_errors import NoSuchArticle
 
 bp = Blueprint('articles', __name__, url_prefix='/articles')
 articles_helper = ConnectorCreator().articles_connector
@@ -24,8 +26,23 @@ def articles_list():
 
     If the params are invalid, the default values will be returned.
     """
-    size = request.args.get('size', 10, int)
-    page = request.args.get('page', 1, int)
+    size = request.args.get('size', 10)
+    page = request.args.get('page', 1)
+
+    # parameters checking
+    # if size or page is not a number, then return 400
+    try:
+        size = int(size)
+        page = int(page)
+    except ValueError:
+        error = create_error_message('Invalid query parameters. size/page must be a number.')
+        return jsonify(error), 400
+
+    # if size or page is less than or equals to 0, then return 400
+    if size <= 0 or page <= 0:
+        error = create_error_message('Invalid query parameters. size/page must be greater than 0.')
+        return jsonify(error), 400
+
     a_list = articles_helper.get_list(size=size, page=page)
     return jsonify(a_list), 200
 
@@ -38,8 +55,12 @@ def article_content(article_id):
 
     :param article_id: string, the id of article
     """
-    content = articles_helper.get_content(article_id)
-    views = articles_helper.update_views(article_id)
+    try:
+        content = articles_helper.get_content(article_id)
+        views = articles_helper.update_views(article_id)
+    except NoSuchArticle:
+        error = create_error_message('Specified article does not exists.')
+        return jsonify(error), 404
     return jsonify(**content, **views), 200
 
 

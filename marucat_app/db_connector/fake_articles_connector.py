@@ -23,6 +23,8 @@ class ArticlesConnector(object):
 
         :param article_id: identity of article
         """
+        if article_id == 'TEST_NOT_FOUND':
+            raise NoSuchArticle('No such article.')
         return {'id': article_id, 'content': 'The content of article.'}
 
     @staticmethod
@@ -31,6 +33,4 @@ class ArticlesConnector(object):
 
         :param article_id: identity of article
         """
-        if article_id == 'TEST_NOT_FOUND':
-            raise NoSuchArticle('No such article.')
         return {'views': 12345, 'views_id': article_id}
