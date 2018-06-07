@@ -62,7 +62,7 @@ GET /articles/list
 GET /articles/list?size=10&page=1
 ```
 
-*状态码*
+##### 状态码
 
 * 200 OK
     * 正常
@@ -83,7 +83,7 @@ Example:
     GET /articles/aid123456
 ```
 
-*状态码*
+##### 状态码
 
 * 200 OK
     * 正常
@@ -108,7 +108,7 @@ Example:
     GET /articles/aid123456/comment?size=10&page=1
 ```
 
-*状态码*
+##### 状态码
 
 * 200 OK
     * 正常
