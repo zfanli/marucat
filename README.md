@@ -72,9 +72,9 @@ GET /articles/list?size=10&page=1
 
 ##### 状态码
 
-* 200 OK ✅
+* ✔️ 200 OK
     * 正常
-* 400 BAD REQUEST ❌
+* ✖️ 400 BAD REQUEST
     * size/page 非数值
     * size/page 小于等于0
 
@@ -93,9 +93,9 @@ Example:
 
 ##### 状态码
 
-* 200 OK ✅
+* ✔️ 200 OK
     * 正常
-* 404 NOT FOUND ❌
+* ✖️ 404 NOT FOUND
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
@@ -118,12 +118,12 @@ Example:
 
 ##### 状态码
 
-* 200 OK ✅
+* ✔️ 200 OK
     * 正常
-* 400 BAD REQUEST ❌
+* ✖️ 400 BAD REQUEST
     * size/page 非数值
     * size/page 小于等于0
-* 404 NOT FOUND ❌
+* ✖️ 404 NOT FOUND
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
