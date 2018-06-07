@@ -386,11 +386,22 @@ from werkzeug.exceptions import NotFound
 
 
 @app.errorhandler(NotFound)
-def not_found(e):
+def not_found(error):
     return '', 404
 ```
 
 也没什么好解释的，注意这个方法需要接受一个 exception 的参数，如果不接受参数在运行时会抛错误的。
+
+这个 exception 有几个可访问的属性，在特定时候需要用到。以上面函数接受的参数名 `error` 为例。
+
+```python
+# 错误状态码 e.g. 400
+error.code
+# 错误名 e.g. NOT FOUND
+error.name
+# 错误信息
+error.description
+```
 
 处理其他 code 的套路是一样的。
 
