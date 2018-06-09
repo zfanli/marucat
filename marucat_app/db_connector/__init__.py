@@ -6,7 +6,7 @@
 from logging import getLogger
 from functools import wraps
 from marucat_app.db_connector.fake_articles_connector import FakeArticlesConnector
-from marucat_app.runtime_errors import DatabaseDoNotExist
+from marucat_app.errors import DatabaseDoNotExist
 
 logger = getLogger()
 

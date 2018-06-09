@@ -6,7 +6,7 @@
 from flask import Blueprint, request, jsonify, current_app
 from marucat_app.db_connector import ConnectorCreator
 from marucat_app.marucat_utils import create_error_message
-from marucat_app.runtime_errors import NoSuchArticle
+from marucat_app.errors import NoSuchArticle
 
 bp = Blueprint('articles', __name__, url_prefix='/articles')
 
