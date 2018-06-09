@@ -6,3 +6,7 @@
 
 class NoSuchArticle(RuntimeError):
     pass
+
+
+class DatabaseDoNotExist(RuntimeError):
+    pass

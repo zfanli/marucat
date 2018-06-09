@@ -3,13 +3,12 @@
 
 """Integration"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 from marucat_app.db_connector import ConnectorCreator
 from marucat_app.marucat_utils import create_error_message
 from marucat_app.runtime_errors import NoSuchArticle
 
 bp = Blueprint('articles', __name__, url_prefix='/articles')
-articles_helper = ConnectorCreator().articles_connector
 
 
 @bp.route('/list', methods=['GET'])
@@ -43,6 +42,7 @@ def articles_list():
         error = create_error_message('Invalid query parameters. size/page must be greater than 0.')
         return jsonify(error), 400
 
+    articles_helper = g.articles_helper
     a_list = articles_helper.get_list(size=size, page=page)
     return jsonify(a_list), 200
 
@@ -55,6 +55,8 @@ def article_content(article_id):
 
     :param article_id: string, the id of article
     """
+
+    articles_helper = ConnectorCreator(current_app.config['db']).articles_connector
     try:
         content = articles_helper.get_content(article_id)
         views = articles_helper.update_views(article_id)
@@ -72,5 +74,7 @@ def article_comments(article_id):
     """
     size = request.args.get('size', 10, int)
     page = request.args.get('page', 1, int)
+
+    articles_helper = g.articles_helper
     comments = articles_helper.get_comments(article_id, size)
     return jsonify(comments), 200

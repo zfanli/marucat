@@ -3,14 +3,14 @@
 
 """Integrate the app, register blueprints and handle errors"""
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, g
 from logging import basicConfig, ERROR
 from marucat_app.marucat_utils import create_error_message
 from marucat_app.articles import bp as articles
 
 
 # create flask application
-def create_app(*, level=ERROR):
+def create_app(*, level=ERROR, db='mongodb'):
 
     # logging configuration
     basicConfig(
@@ -19,6 +19,8 @@ def create_app(*, level=ERROR):
     )
 
     app = Flask('marucat_app')
+
+    app.config['db'] = db
 
     @app.route('/')
     def hello():

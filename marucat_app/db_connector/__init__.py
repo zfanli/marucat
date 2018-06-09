@@ -5,7 +5,8 @@
 
 from logging import getLogger
 from functools import wraps
-from marucat_app.db_connector.fake_articles_connector import ArticlesConnector
+from marucat_app.db_connector.fake_articles_connector import FakeArticlesConnector
+from marucat_app.runtime_errors import DatabaseDoNotExist
 
 logger = getLogger()
 
@@ -72,8 +73,16 @@ class Articles(object):
 
 class ConnectorCreator(object):
     """Create connector"""
-    def __init__(self):
-        self._articles = Articles(ArticlesConnector())
+    def __init__(self, db):
+        if db == 'test':
+            # TEST mode load fake db helper
+            self._articles = Articles(FakeArticlesConnector())
+        elif db == 'mongodb':
+            # load MongoDB helper
+            self._articles = Articles(FakeArticlesConnector())
+        else:
+            # Specific db is not supported
+            raise DatabaseDoNotExist('Specific Database do not exist: {}'.format(db))
 
     @property
     def articles_connector(self):

@@ -6,7 +6,7 @@
 from marucat_app.runtime_errors import NoSuchArticle
 
 
-class ArticlesConnector(object):
+class FakeArticlesConnector(object):
     """A fake API for testing"""
     @staticmethod
     def get_list(*, size, page):
