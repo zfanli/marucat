@@ -2,7 +2,7 @@
 
 <div align="center"> Maru is my cat's name. He is Dragon Li.</div>
 
-<img align="center" src="./docs/marucat.svg">
+<div align="center"<img src="./docs/marucat.svg"></div>
 
 ## 定位
 
