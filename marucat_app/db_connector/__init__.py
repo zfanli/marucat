@@ -79,10 +79,20 @@ class ConnectorCreator(object):
             self._articles = Articles(FakeArticlesConnector())
         elif db == 'mongodb':
             # load MongoDB helper
-            self._articles = Articles(FakeArticlesConnector())
+            self.init_mongodb()
         else:
             # Specific db is not supported
             raise DatabaseDoNotExist('Specific Database do not exist: {}'.format(db))
+
+    def init_mongodb(self):
+        """Init MongoDB helper"""
+        # get connection of MondoDB
+        # connection = None
+        # create connector use the connection of MongoDB
+        # self._articles = Articles(ArticlesConnector(connection))
+
+        # TODO just pass now
+        self._articles = Articles(FakeArticlesConnector())
 
     @property
     def articles_connector(self):
@@ -90,6 +100,5 @@ class ConnectorCreator(object):
 
 
 if __name__ == '__main__':
-    o = ConnectorCreator()
-    a = o.articles_connector
-    print(a.get_list(size=10, page=1))
+    c = ConnectorCreator('test')
+    getattr(c, 'articles_connector')

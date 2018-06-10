@@ -5,7 +5,8 @@
 
 from flask import Flask, jsonify, g
 from logging import basicConfig, ERROR
-from marucat_app.marucat_utils import create_error_message
+from marucat_app.db_connector import ConnectorCreator
+from marucat_app.marucat_utils import create_error_message, CONNECTOR_FACTORY, APP_NAME
 from marucat_app.articles import bp as articles
 
 
@@ -18,9 +19,9 @@ def create_app(*, level=ERROR, db='mongodb'):
         format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s'
     )
 
-    app = Flask('marucat_app')
+    app = Flask(APP_NAME)
 
-    app.config['db'] = db
+    app.config[CONNECTOR_FACTORY] = ConnectorCreator(db)
 
     @app.route('/')
     def hello():

@@ -10,3 +10,7 @@ class NoSuchArticle(RuntimeError):
 
 class DatabaseDoNotExist(RuntimeError):
     pass
+
+
+class NotANumber(RuntimeError):
+    pass

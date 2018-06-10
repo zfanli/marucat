@@ -51,20 +51,20 @@ Blog 前后端分离（🌟）。
 GET /articles/list
 
 Query parameters
-    size: number, the size of list, default is 10
-    page: number, the required start position, default is 1
+    size: number, fetch size, 10 by defaylt
+    page: number, fetch start position, 1 by defaylt
 
 Example:
     GET /articles/list?size=10&page=1
 ```
 
-如果不给查询参数则使用默认值。
+可以不给查询参数。
 
 ```
 GET /articles/list
 ```
 
-等价于下面的请求。
+不给查询参数将等价于下面的请求。
 
 ```
 GET /articles/list?size=10&page=1
@@ -109,8 +109,8 @@ Parameter
     article_id: string, indentity of article
 
 Query parameters
-    size: number, size of comments, default is 10
-    page: number, start position, default is 1
+    size: number, fetch size, 10 by defaylt
+    page: number, fetch start position, 1 by defaylt
 
 Example:
     GET /articles/aid123456/comment?size=10&page=1

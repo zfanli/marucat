@@ -34,3 +34,15 @@ class FakeArticlesConnector(object):
         :param article_id: identity of article
         """
         return {'views': 12345, 'views_id': article_id}
+
+    @staticmethod
+    def get_comments(article_id, *, size, page):
+        """get article content
+
+        :param article_id: identity of article
+        :param size: fetch size
+        :param page: fetch start position
+        """
+        if article_id == 'TEST_NOT_FOUND':
+            raise NoSuchArticle('No such article.')
+        return {'id': article_id, 'comments': 'Test comments', 'size': size, 'page': page}

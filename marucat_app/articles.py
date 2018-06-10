@@ -1,80 +1,142 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Integration"""
+"""Blueprint of articles"""
 
 from flask import Blueprint, request, jsonify, current_app
-from marucat_app.db_connector import ConnectorCreator
-from marucat_app.marucat_utils import create_error_message
-from marucat_app.errors import NoSuchArticle
+from marucat_app.errors import NoSuchArticle, NotANumber
+from marucat_app.marucat_utils import (
+    get_db_helper,
+    not_a_number,
+    not_greater_than_zero,
+    no_such_article,
+    is_special_characters_contained,
+    convert_and_check_number_gt_zero
+)
 
+# handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
+
+# the name of article's db helper
+ARTICLES_HELPER = 'articles_connector'
 
 
 @bp.route('/list', methods=['GET'])
-def articles_list():
-    """Get a list of articles
+def articles_list_fetch():
+    """Fetch articles list
 
     Query parameters
-        size: number, the size of list
-        page: number, the required start position
+        size: number, fetch size
+        page: number, fetch start position
 
     Request without query parameters will use the default value,
     the request of GET /articles/list,
     equals to GET /articles/list?size=10&page=1
 
-    If the params are invalid, the default values will be returned.
+    :return
+        200 normally
+        400 invalid query parameters
     """
     size = request.args.get('size', 10)
     page = request.args.get('page', 1)
 
-    # parameters checking
-    # if size or page is not a number, then return 400
+    # convert to number and checking
     try:
-        size = int(size)
-        page = int(page)
+        size, page = convert_and_check_number_gt_zero(size, page)
+    except NotANumber:
+        # not a number
+        error = not_a_number('size/page')
+        return jsonify(error), 400
     except ValueError:
-        error = create_error_message('Invalid query parameters. size/page must be a number.')
+        # values <= 0
+        error = not_greater_than_zero('size/page')
         return jsonify(error), 400
 
-    # if size or page is less than or equals to 0, then return 400
-    if size <= 0 or page <= 0:
-        error = create_error_message('Invalid query parameters. size/page must be greater than 0.')
-        return jsonify(error), 400
+    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
 
-    articles_helper = g.articles_helper
+    # fetch list
     a_list = articles_helper.get_list(size=size, page=page)
+
+    # 200
     return jsonify(a_list), 200
 
 
 @bp.route('/aid<article_id>', methods=['GET'])
 def article_content(article_id):
-    """Get the content of article by id
-
-    This api will get content, views, comments of the specific article
+    """Fetch article's content by id
 
     :param article_id: string, the id of article
+    :return
+        200 normally
+        404 article does not exist
     """
 
-    articles_helper = ConnectorCreator(current_app.config['db']).articles_connector
+    # check is the provided article id contains a special characters or not
+    if is_special_characters_contained(article_id):
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
+
+    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+
+    # fetch content
     try:
         content = articles_helper.get_content(article_id)
         views = articles_helper.update_views(article_id)
     except NoSuchArticle:
-        error = create_error_message('Specified article does not exists.')
+        # 404
+        error = no_such_article()
         return jsonify(error), 404
+
+    # 200
     return jsonify(**content, **views), 200
 
 
-@bp.route('/aid<article_id>/comments')
-def article_comments(article_id):
-    """get comments of specific article
+@bp.route('/aid<article_id>/comments', methods=['GET'])
+def article_comments_fetch(article_id):
+    """Fetch article's comments by id
+
+    Query parameters
+        size: number, fetch size
+        page: number, fetch start position
 
     :param article_id: identity of article
+    :return
+        200 normally
+        400 invalid query parameters
+        404 article does not exist
     """
-    size = request.args.get('size', 10, int)
-    page = request.args.get('page', 1, int)
 
-    articles_helper = g.articles_helper
-    comments = articles_helper.get_comments(article_id, size)
+    # check is the provided article id contains a special characters or not
+    if is_special_characters_contained(article_id):
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
+
+    size = request.args.get('size', 10)
+    page = request.args.get('page', 1)
+
+    # convert to number and checking
+    try:
+        size, page = convert_and_check_number_gt_zero(size, page)
+    except NotANumber:
+        # not a number
+        error = not_a_number('size/page')
+        return jsonify(error), 400
+    except ValueError:
+        # values <= 0
+        error = not_greater_than_zero('size/page')
+        return jsonify(error), 400
+
+    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+
+    # fetch comments
+    try:
+        comments = articles_helper.get_comments(article_id, size=size, page=page)
+    except NoSuchArticle:
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
+
+    # 200
     return jsonify(comments), 200
