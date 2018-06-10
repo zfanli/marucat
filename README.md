@@ -2,6 +2,8 @@
 
 <div align="center"> Maru is my cat's name. He is Dragon Li.</div>
 
+<img align="center" src="./docs/marucat.svg">
+
 ## 定位
 
 > MaruCat is a Back-End service provider of my blog.
