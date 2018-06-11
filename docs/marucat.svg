@@ -187,7 +187,8 @@
         <path d="M 729.5625 580.75 L 784.5625 580.75 L 784.5625 611.55 C 768.0625 607.7 746.0625 623.1 729.5625 615.4 Z" fill="white"/>
         <path d="M 729.5625 580.75 L 784.5625 580.75 L 784.5625 611.55 C 768.0625 607.7 746.0625 623.1 729.5625 615.4 Z" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
         <text transform="translate(734.5625 588.851)" fill="black">
-          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.164" y="15">Fake</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="9" y="6">Fake</tspan>
+          <tspan font-family="Helvetica Neue" font-size="12" font-weight="400" fill="black" x="14" y="20">DB</tspan>
         </text>
       </g>
     </g>
