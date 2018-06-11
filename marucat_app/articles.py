@@ -6,11 +6,8 @@
 from flask import Blueprint, request, jsonify, current_app
 from marucat_app.errors import NoSuchArticle, NotANumber
 from marucat_app.marucat_utils import (
-    get_db_helper,
-    not_a_number,
-    not_greater_than_zero,
-    no_such_article,
-    is_special_characters_contained,
+    get_db_helper, not_a_number, not_greater_than_zero,
+    no_such_article, is_special_characters_contained,
     convert_and_check_number_gt_zero
 )
 
@@ -142,3 +139,13 @@ def article_comments_fetch(article_id):
 
     # 200
     return jsonify(comments), 200
+
+
+@bp.route('/aid<article_id>/comments', methods=['POST'])
+def article_comments_save(article_id):
+    """Submit comments
+
+    :param article_id: indentity of article
+    """
+    data = request.get_json()
+    return jsonify(data), 200

@@ -52,12 +52,17 @@ def test_get_list(client):
             # check Content-Type
             assert 'application/json' == r.content_type
             # check data
-            assert [{'id': 1, 'size': e_size}, {'id': 2, 'page': e_page}] == r.get_json()
+            assert [
+                {'id': 1, 'size': e_size},
+                {'id': 2, 'page': e_page}
+            ] == r.get_json()
         elif 400 == code:
             assert r.data
             assert r.get_json()['error'] is not None
         else:
-            raise AssertionError('Unexpected status code:{}'.format(r.status_code))
+            raise AssertionError(
+                'Unexpected status code:{}'.format(r.status_code)
+            )
 
     # 200 below
 
@@ -201,7 +206,12 @@ def test_get_comments(client):
             # check Content-Type
             assert 'application/json' == r.content_type
             # check data
-            data = {'id': aid, 'comments': 'Test comments', 'size': e_size, 'page': e_page}
+            data = {
+                'id': aid,
+                'comments': 'Test comments', 
+                'size': e_size,
+                'page': e_page
+            }
             assert data == r.get_json()
         elif code == 400 or code == 404:
             # check Content-Type
@@ -211,7 +221,9 @@ def test_get_comments(client):
             else:
                 assert not r.data
         else:
-            raise AssertionError('Unexpected status code:{}'.format(r.status_code))
+            raise AssertionError(
+                'Unexpected status code:{}'.format(r.status_code)
+            )
 
     # default values
     perform_get_comments('T123', None, (10, 1))
@@ -244,3 +256,9 @@ def test_get_comments(client):
     # method not allowed
     rv = client.put('/articles/aidT123/comment')
     assert 404 == rv.status_code
+
+
+def test_post_comments(client):
+
+    rv = client.post('articles/aid1234/comments', {'test': 1234})
+    print(rv.data)
