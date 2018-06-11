@@ -132,7 +132,9 @@ def article_comments_fetch(article_id):
 
     # fetch comments
     try:
-        comments = articles_helper.get_comments(article_id, size=size, page=page)
+        comments = articles_helper.get_comments(
+            article_id, size=size, page=page
+        )
     except NoSuchArticle:
         # 404
         error = no_such_article()

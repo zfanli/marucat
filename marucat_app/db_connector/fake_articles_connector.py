@@ -45,4 +45,9 @@ class FakeArticlesConnector(object):
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticle('No such article.')
-        return {'id': article_id, 'comments': 'Test comments', 'size': size, 'page': page}
+        return {
+            'id': article_id,
+            'comments': 'Test comments',
+            'size': size,
+            'page': page
+        }

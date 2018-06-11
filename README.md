@@ -137,11 +137,21 @@ Example:
 POST /articles/aid<article_id>/comments
 ```
 
+##### 状态码
+
+* ✔️ 201 CREATED
+    * 正常
+
 #### 删除评论
 
 ```
 DELETE /articles/aid<article_id>/comments
 ```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
 
 ### Pending
 
@@ -150,8 +160,13 @@ DELETE /articles/aid<article_id>/comments
 #### 更新文章
 
 ```
-UPDATE /articles/aid<article_id>
+PUT /articles/aid<article_id>
 ```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
 
 #### 创建文章
 
@@ -159,11 +174,21 @@ UPDATE /articles/aid<article_id>
 POST /articles/aid<article_id>
 ```
 
+##### 状态码
+
+* ✔️ 201 CREATED
+    * 正常
+
 #### 删除文章
 
 ```
 DELETE /articles/aid<article_id>
 ```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
 
 ### ⚙全局设定
 
@@ -175,15 +200,25 @@ DELETE /articles/aid<article_id>
 GET /settings
 ```
 
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
+
 #### 更新设定
 
 ```
-UPDATE /settings/<items>
+PUT /settings/<items>
 ```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
 
 ## 发布&部署
 
-待定
+// TODO
 
 ## 相关文档
 

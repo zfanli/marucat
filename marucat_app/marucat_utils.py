@@ -55,16 +55,19 @@ def no_such_article():
 def convert_to_number(*arr):
     """Convert all elements of the arr to number
 
-    :param arr: target array contains the elements which will be converted to number
+    :param arr: array of elements which will be converted to number
     :return the result of conversion
-    If the array contains a element which is not a number then raise the NotANumber error.
+
+    Raise a NotANumber error when a element cannot convert to number.
     """
-    r = []
+    r = [None for x in range(len(arr))]
     try:
-        for a in arr:
-            r.append(int(a))
+        for i in range(len(arr)):
+            r[i] = int(arr[i])
     except ValueError:
-        raise NotANumber('Parameters contains a element which is not a number.')
+        raise NotANumber(
+            'Parameters contains a element which is not a number.'
+        )
 
     # there is no error so just return the result
     return r
@@ -84,7 +87,7 @@ def convert_and_check_number_gt_zero(*arr):
 
 def is_special_characters_contained(target):
     """Check if the string contains a special characters list below"""
-    pattern = '[`~!@#$%^&*()=_\-\+<>?:"{},.\/;\'\[\]]'
+    pattern = r'[`~!@#$%^&*()=_\-\+<>?:"{},./;\'\[\]]'
     return bool(re.search(pattern, target))
 
 
@@ -102,7 +105,8 @@ if __name__ == '__main__':
             convert_to_number(*arr)
             raise AssertionError('Function do not work.')
         except NotANumber as e:
-            assert e.__str__() == 'Parameters contains a element which is not a number.'
+            msg = 'Parameters contains a element which is not a number.'
+            assert e.__str__() == msg
 
     convert_error('a')
     convert_error('123', 'a')

@@ -5,7 +5,9 @@
 
 from logging import getLogger
 from functools import wraps
-from marucat_app.db_connector.fake_articles_connector import FakeArticlesConnector
+from marucat_app.db_connector.fake_articles_connector import (
+    FakeArticlesConnector
+)
 from marucat_app.errors import DatabaseDoNotExist
 
 logger = getLogger()
@@ -36,16 +38,16 @@ class Articles(object):
 
     @log
     def get_list(self, *, size, page):
-        """get a list of articles
+        """fetch articles list
 
-        :param size: length of list
-        :param page: start position of list
+        :param size: fetch size
+        :param page: fetch start position
         """
         return self._connector.get_list(size=size, page=page)
 
     @log
     def get_content(self, article_id):
-        """get article content
+        """fetch article content
 
         :param article_id: identity of article
         """
@@ -53,7 +55,7 @@ class Articles(object):
 
     @log
     def update_views(self, article_id):
-        """update views every times the article was visited
+        """update the count of views when article was visited
 
         :param article_id: identity of article
         """
@@ -61,11 +63,11 @@ class Articles(object):
 
     @log
     def get_comments(self, article_id, *, size, page):
-        """get comments of specific article
+        """fetch comments of specific article
 
         :param article_id: identity of article
-        :param size: size of comments
-        :param page: start position
+        :param size: fetch size
+        :param page: fetch start position
         :return: array of comments
         """
         return self._connector.get_comments(article_id, size=size, page=page)
@@ -82,7 +84,9 @@ class ConnectorCreator(object):
             self.init_mongodb()
         else:
             # Specific db is not supported
-            raise DatabaseDoNotExist('Specific Database do not exist: {}'.format(db))
+            raise DatabaseDoNotExist(
+                'Specific Database do not exist: {}'.format(db)
+            )
 
     def init_mongodb(self):
         """Init MongoDB helper"""
