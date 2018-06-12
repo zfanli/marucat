@@ -3,8 +3,10 @@
 
 """Unit tests about API of articles"""
 
-import pytest
 from logging import DEBUG
+
+import pytest
+
 from marucat_app import create_app
 
 
@@ -208,7 +210,7 @@ def test_get_comments(client):
             # check data
             data = {
                 'id': aid,
-                'comments': 'Test comments', 
+                'comments': 'Test comments',
                 'size': e_size,
                 'page': e_page
             }
@@ -260,5 +262,8 @@ def test_get_comments(client):
 
 def test_post_comments(client):
 
-    rv = client.post('articles/aid1234/comments', {'test': 1234})
+    rv = client.post(
+        'articles/aid1234/comments',
+        json={'test': 1234}
+    )
     print(rv.data)
