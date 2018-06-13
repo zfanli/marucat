@@ -3,13 +3,14 @@
 
 """Blueprint of articles"""
 
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, current_app, jsonify, request
+
 from marucat_app.errors import NoSuchArticle, NotANumber
-from marucat_app.marucat_utils import (
-    get_db_helper, not_a_number, not_greater_than_zero,
-    no_such_article, is_special_characters_contained,
-    convert_and_check_number_gt_zero
-)
+from marucat_app.marucat_utils import (convert_and_check_number_gt_zero,
+                                       get_db_helper,
+                                       is_special_characters_contained,
+                                       no_such_article, not_a_number,
+                                       not_greater_than_zero)
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -167,6 +168,8 @@ def article_comments_delete(article_id, comment_id):
     r = {'article_id': article_id, 'comment_id': comment_id}
     return jsonify(r), 200
 
+
+# Pending apis below
 
 @bp.route('/aid<article_id>', methods=['PUT'])
 def article_content_save(article_id):
