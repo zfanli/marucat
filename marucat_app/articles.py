@@ -143,9 +143,65 @@ def article_comments_fetch(article_id):
 
 @bp.route('/aid<article_id>/comments', methods=['POST'])
 def article_comments_save(article_id):
-    """Submit comments
+    """Push comment
 
-    :param article_id: indentity of article
+    :param article_id: identity of article
     """
+
+    # TODO
+
     data = request.get_json()
     return jsonify(data), 200
+
+
+@bp.route('/aid<article_id>/comments/<comment_id>', methods=['DELETE'])
+def article_comments_delete(article_id, comment_id):
+    """Delete specific comment
+
+    :param article_id: identity of article
+    :param comment_id: identity of comment
+    """
+
+    # TODO
+
+    r = {'article_id': article_id, 'comment_id': comment_id}
+    return jsonify(r), 200
+
+
+@bp.route('/aid<article_id>', methods=['PUT'])
+def article_content_save(article_id):
+    """Update article's content
+
+    :param article_id: identity of article
+    """
+
+    # TODO
+
+    r = {'article_id': article_id, 'method': 'PUT'}
+    return jsonify(r), 200
+
+
+@bp.route('/aid<article_id>', methods=['POST'])
+def article_content_create(article_id):
+    """Update article's content
+
+    :param article_id: identity of article
+    """
+
+    # TODO
+
+    r = {'article_id': article_id, 'method': 'POST'}
+    return jsonify(r), 200
+
+
+@bp.route('/aid<article_id>', methods=['DELETE'])
+def article_content_delete(article_id):
+    """Update article's content
+
+    :param article_id: identity of article
+    """
+
+    # TODO
+
+    r = {'article_id': article_id, 'method': 'DELETE'}
+    return jsonify(r), 200
