@@ -39,7 +39,7 @@ root
 
 这个包之外还有一个 `run.py`，我们定义其为程序的入口，启动的位置。
 
-为了方便调试，`run.py` 将以 DEGUB 模式启动开发服务器。
+为了方便调试，`run.py` 将以 DEBUG 模式启动开发服务器。
 
 ```python
 from marucat_app import app
@@ -311,7 +311,7 @@ Date: Thu, 31 May 2018 09:02:34 GMT
 
 https://github.com/faif/python-patterns
 
-在其中我找到了一个合适的设计模式，Bridge Pattren。
+在其中我找到了一个合适的设计模式，Bridge Pattern。
 
 概念总结一下，对外和对内的处理基本稍有些差异。大致如下：
 

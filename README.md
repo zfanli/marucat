@@ -55,8 +55,8 @@ Blog 前后端分离（🌟）。
 GET /articles/list
 
 Query parameters
-    size: number, fetch size, 10 by defaylt
-    page: number, fetch start position, 1 by defaylt
+    size: number, fetch size, 10 by default
+    page: number, fetch start position, 1 by default
 
 Example:
     GET /articles/list?size=10&page=1
@@ -89,7 +89,7 @@ GET /articles/list?size=10&page=1
 GET /articles/aid<article_id>
 
 Parameter
-    article_id: string, indentity of article
+    article_id: string, identity of article
 
 Example:
     GET /articles/aid123456
@@ -110,11 +110,11 @@ Example:
 GET /articles/aid<article_id>/comments
 
 Parameter
-    article_id: string, indentity of article
+    article_id: string, identity of article
 
 Query parameters
-    size: number, fetch size, 10 by defaylt
-    page: number, fetch start position, 1 by defaylt
+    size: number, fetch size, 10 by default
+    page: number, fetch start position, 1 by default
 
 Example:
     GET /articles/aid123456/comment?size=10&page=1
@@ -223,5 +223,5 @@ PUT /settings/<items>
 ## 相关文档
 
 * [部署 MongoDB 环境（本地环境和服务器环境）](docs/deploy-mongodb.md)
-* [在 Flask 框架创建 RESR API 的过程和疏通](docs/create-rest-api.md)
+* [在 Flask 框架创建 REST API 的过程和疏通](docs/create-rest-api.md)
 

@@ -170,6 +170,7 @@ def article_comments_delete(article_id, comment_id):
 
 
 # Pending apis below
+# Those apis might not be implemented
 
 @bp.route('/aid<article_id>', methods=['PUT'])
 def article_content_save(article_id):
@@ -186,7 +187,7 @@ def article_content_save(article_id):
 
 @bp.route('/aid<article_id>', methods=['POST'])
 def article_content_create(article_id):
-    """Update article's content
+    """Create article
 
     :param article_id: identity of article
     """
@@ -199,7 +200,7 @@ def article_content_create(article_id):
 
 @bp.route('/aid<article_id>', methods=['DELETE'])
 def article_content_delete(article_id):
-    """Update article's content
+    """Delete article
 
     :param article_id: identity of article
     """
