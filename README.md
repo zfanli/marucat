@@ -82,6 +82,29 @@ GET /articles/list?size=10&page=1
     * size/page 非数值
     * size/page 小于等于0
 
+##### 数据结构
+
+```python
+[
+     {
+        # ID
+        'aid': 'ID_OF_ARTICLE',
+        # Author
+        'author': 'THE AUTHOR',
+        # Abstraction
+        'peek': 'A peek of the content of requested article.',
+        # Counts of views
+        'views': 998,
+        # Counts of likes
+        'likes': 13,
+        # Counts of comments, use reviews because of short
+        'reviews': 8,
+        # The timestamp of created or updated
+        'timestamp': 1528969644.344048
+    },
+    # ...
+]
+```
 
 #### 获取文章内容
 

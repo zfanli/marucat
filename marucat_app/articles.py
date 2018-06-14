@@ -169,8 +169,9 @@ def article_comments_delete(article_id, comment_id):
     return jsonify(r), 200
 
 
-# Pending apis below
-# Those apis might not be implemented
+# Pending apis below.
+# Those apis might not be implemented.
+# Just placeholders for now.
 
 @bp.route('/aid<article_id>', methods=['PUT'])
 def article_content_save(article_id):

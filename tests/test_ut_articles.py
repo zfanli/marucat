@@ -54,10 +54,12 @@ def test_get_list(client):
             # check Content-Type
             assert 'application/json' == r.content_type
             # check data
-            assert [
-                {'id': 1, 'size': e_size},
-                {'id': 2, 'page': e_page}
-            ] == r.get_json()
+            fake_data = {
+                'test_only': 'TESTING',
+                'size': e_size,
+                'page': e_page
+            }
+            assert fake_data == r.get_json()[1]
         elif 400 == code:
             assert r.data
             assert r.get_json()['error'] is not None

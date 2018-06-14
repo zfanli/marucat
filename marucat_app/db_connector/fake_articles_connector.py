@@ -15,7 +15,25 @@ class FakeArticlesConnector(object):
         :param size: length of list
         :param page: start position of list
         """
-        return [{'id': 1, 'size': size}, {'id': 2, 'page': page}]
+
+        fake_data = [
+            {
+                'aid': 'ID_OF_ARTICLE',
+                'author': 'THE AUTHOR',
+                'peek': 'A peek of the content of requested article.',
+                'views': 998,
+                'likes': 13,
+                'reviews': 8,
+                'timestamp': 1528969644.344048
+            },
+            {
+                'test_only': 'TESTING',
+                'size': size,
+                'page': page
+            }
+        ]
+
+        return fake_data
 
     @staticmethod
     def get_content(article_id):
