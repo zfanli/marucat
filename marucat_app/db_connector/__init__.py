@@ -3,11 +3,11 @@
 
 """DB connector API define here"""
 
-from logging import getLogger
 from functools import wraps
-from marucat_app.db_connector.fake_articles_connector import (
+from logging import getLogger
+
+from marucat_app.db_connector.fake_articles_connector import \
     FakeArticlesConnector
-)
 from marucat_app.errors import DatabaseDoNotExist
 
 logger = getLogger()

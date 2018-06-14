@@ -4,6 +4,7 @@
 """Utils module for constants and common functions"""
 
 import re
+
 from marucat_app.errors import NotANumber
 
 APP_NAME = 'marucat_app'

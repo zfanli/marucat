@@ -3,8 +3,10 @@
 
 """Integrate the app, register blueprints and handle errors"""
 
-from flask import Flask, jsonify
 from logging import basicConfig, ERROR
+
+from flask import Flask, jsonify
+
 from marucat_app.db_connector import ConnectorCreator
 from marucat_app.articles import bp as articles
 from marucat_app.marucat_utils import (

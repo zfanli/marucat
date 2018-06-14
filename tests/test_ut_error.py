@@ -3,8 +3,10 @@
 
 """Unit tests about error handlers"""
 
-import pytest
 from logging import DEBUG
+
+import pytest
+
 from marucat_app import create_app
 
 
