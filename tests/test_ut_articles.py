@@ -169,7 +169,7 @@ def test_get_content(client):
     perform_get_content('asd\'123', 404)
 
     # 405 method not allowed
-    rv = client.post('/articles/aidTest')
+    rv = client.patch('/articles/aidTest')
     assert 405 == rv.status_code
 
 

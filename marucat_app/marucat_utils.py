@@ -5,7 +5,7 @@
 
 import re
 
-from marucat_app.errors import NotANumber
+from marucat_app.errors import NotANumberError
 
 APP_NAME = 'marucat_app'
 CONNECTOR_FACTORY = 'connector_factory'
@@ -66,7 +66,7 @@ def convert_to_number(*arr):
         for i in range(len(arr)):
             r[i] = int(arr[i])
     except ValueError:
-        raise NotANumber(
+        raise NotANumberError(
             'Parameters contains a element which is not a number.'
         )
 
@@ -105,7 +105,7 @@ if __name__ == '__main__':
         try:
             convert_to_number(*arr)
             raise AssertionError('Function do not work.')
-        except NotANumber as e:
+        except NotANumberError as e:
             msg = 'Parameters contains a element which is not a number.'
             assert e.__str__() == msg
 

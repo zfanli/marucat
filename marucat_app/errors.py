@@ -4,13 +4,13 @@
 """Definition of runtime errors"""
 
 
-class NoSuchArticle(RuntimeError):
+class NoSuchArticleError(RuntimeError):
     pass
 
 
-class DatabaseDoNotExist(RuntimeError):
+class DatabaseDoNotExistError(RuntimeError):
     pass
 
 
-class NotANumber(RuntimeError):
+class NotANumberError(RuntimeError):
     pass

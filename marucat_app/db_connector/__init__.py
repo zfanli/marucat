@@ -8,7 +8,7 @@ from logging import getLogger
 
 from marucat_app.db_connector.fake_articles_connector import \
     FakeArticlesConnector
-from marucat_app.errors import DatabaseDoNotExist
+from marucat_app.errors import DatabaseDoNotExistError
 
 logger = getLogger()
 
@@ -84,7 +84,7 @@ class ConnectorCreator(object):
             self.init_mongodb()
         else:
             # Specific db is not supported
-            raise DatabaseDoNotExist(
+            raise DatabaseDoNotExistError(
                 'Specific Database do not exist: {}'.format(db)
             )
 

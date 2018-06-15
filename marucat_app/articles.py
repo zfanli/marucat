@@ -5,7 +5,7 @@
 
 from flask import Blueprint, current_app, jsonify, request
 
-from marucat_app.errors import NoSuchArticle, NotANumber
+from marucat_app.errors import NoSuchArticleError, NotANumberError
 from marucat_app.marucat_utils import (convert_and_check_number_gt_zero,
                                        get_db_helper,
                                        is_special_characters_contained,
@@ -41,7 +41,7 @@ def articles_list_fetch():
     # convert to number and checking
     try:
         size, page = convert_and_check_number_gt_zero(size, page)
-    except NotANumber:
+    except NotANumberError:
         # not a number
         error = not_a_number('size/page')
         return jsonify(error), 400
@@ -81,7 +81,7 @@ def article_content(article_id):
     try:
         content = articles_helper.get_content(article_id)
         views = articles_helper.update_views(article_id)
-    except NoSuchArticle:
+    except NoSuchArticleError:
         # 404
         error = no_such_article()
         return jsonify(error), 404
@@ -117,7 +117,7 @@ def article_comments_fetch(article_id):
     # convert to number and checking
     try:
         size, page = convert_and_check_number_gt_zero(size, page)
-    except NotANumber:
+    except NotANumberError:
         # not a number
         error = not_a_number('size/page')
         return jsonify(error), 400
@@ -133,7 +133,7 @@ def article_comments_fetch(article_id):
         comments = articles_helper.get_comments(
             article_id, size=size, page=page
         )
-    except NoSuchArticle:
+    except NoSuchArticleError:
         # 404
         error = no_such_article()
         return jsonify(error), 404

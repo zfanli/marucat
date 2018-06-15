@@ -3,11 +3,12 @@
 
 """A fake db connector just for testing"""
 
-from marucat_app.errors import NoSuchArticle
+from marucat_app.errors import NoSuchArticleError
 
 
 class FakeArticlesConnector(object):
     """A fake API for testing"""
+
     @staticmethod
     def get_list(*, size, page):
         """get a list of articles
@@ -42,7 +43,7 @@ class FakeArticlesConnector(object):
         :param article_id: identity of article
         """
         if article_id == 'TEST_NOT_FOUND':
-            raise NoSuchArticle('No such article.')
+            raise NoSuchArticleError('No such article.')
         return {'id': article_id, 'content': 'The content of article.'}
 
     @staticmethod
@@ -62,7 +63,7 @@ class FakeArticlesConnector(object):
         :param page: fetch start position
         """
         if article_id == 'TEST_NOT_FOUND':
-            raise NoSuchArticle('No such article.')
+            raise NoSuchArticleError('No such article.')
         return {
             'id': article_id,
             'comments': 'Test comments',
