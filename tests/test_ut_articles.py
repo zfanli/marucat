@@ -137,13 +137,9 @@ def test_get_content(client):
                 assert r.data
                 assert r.get_json()['error'] is not None
         else:
-            er = {
-                'id': article_id,
-                'content': 'The content of article.',
-                'views': 12345,
-                'views_id': article_id
-            }
-            assert er == r.get_json()
+            r_data = r.get_json()
+            assert article_id == r_data['aid']
+            assert 999 == r_data['views']
 
     # 200 below
     # /article/aidT1234

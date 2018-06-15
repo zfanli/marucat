@@ -11,10 +11,13 @@ class FakeArticlesConnector(object):
 
     @staticmethod
     def get_list(*, size, page):
-        """get a list of articles
+        """Fetch articles' list
+
+        If 'size x page' is greater than actually counts of articles,
+        fetch the all rest of articles.
 
         :param size: length of list
-        :param page: start position of list
+        :param page: start position of list, start by 1
         """
 
         fake_data = [
@@ -23,7 +26,7 @@ class FakeArticlesConnector(object):
                 'author': 'THE AUTHOR',
                 'peek': 'A peek of the content of requested article.',
                 'views': 998,
-                'likes': 13,
+                # 'likes': 13,
                 'reviews': 8,
                 'timestamp': 1528969644.344048
             },
@@ -38,21 +41,23 @@ class FakeArticlesConnector(object):
 
     @staticmethod
     def get_content(article_id):
-        """get article content
+        """Fetch article content
+
+        Every times fetch the content of article,
+        update the counts of views.
 
         :param article_id: identity of article
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
-        return {'id': article_id, 'content': 'The content of article.'}
-
-    @staticmethod
-    def update_views(article_id):
-        """update views every times the article was visited
-
-        :param article_id: identity of article
-        """
-        return {'views': 12345, 'views_id': article_id}
+        return {
+            'aid': article_id,
+            'author': 'THE AUTHOR',
+            'content': 'Full content of requested article.',
+            'views': 999,
+            # 'likes': 32,
+            'timestamp': 1529029508.939738
+        }
 
     @staticmethod
     def get_comments(article_id, *, size, page):
@@ -64,9 +69,18 @@ class FakeArticlesConnector(object):
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
-        return {
-            'id': article_id,
-            'comments': 'Test comments',
-            'size': size,
-            'page': page
-        }
+        return [
+            {
+                'aid': 'ID of article',
+                'cid': 'ID of comment',
+                'from': 'Alice',
+                'to': 'Richard',
+                'body': 'The content of comment',
+                'timestamp': 1529057457.061024
+            },
+            {
+                'test_only_aid': article_id,
+                'page': page,
+                'size': size
+            }
+        ]

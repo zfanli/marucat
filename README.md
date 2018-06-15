@@ -95,11 +95,9 @@ GET /articles/list?size=10&page=1
         'peek': 'A peek of the content of requested article.',
         # Counts of views
         'views': 998,
-        # Counts of likes
-        'likes': 13,
         # Counts of comments, use reviews because of short
         'reviews': 8,
-        # The timestamp of created or updated
+        # Timestamp for created or updated
         'timestamp': 1528969644.344048
     },
     # ...
@@ -126,6 +124,22 @@ Example:
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
+##### 数据结构
+
+```python
+{
+    # ID
+    'aid': 'ID_OF_ARTICLE',
+    # Author
+    'author': 'THE AUTHOR',
+    # Full content
+    'content': 'Full content of requested article.',
+    # Counts of views
+    'views': 241,
+    # Timestamp for created or updated
+    'timestamp': 1529029508.939738
+}
+```
 
 #### 获取评论
 
@@ -238,6 +252,28 @@ PUT /settings/<items>
 
 * ✔️ 200 OK
     * 正常
+
+### Models
+
+#### Articles
+
+```python
+{
+    'aid': 'ID of article',
+    'author': 'AUTHOR',
+    'peek': 'A peek of content.',
+    'content': 'The content of article.',
+    'views': 999,
+    'comments': [
+        {
+            'aid': 'ID of article',
+            'cid': 'ID of comment',
+            'body': 'Content of comment.'
+        }
+    ]
+    'deleted': False
+}
+```
 
 ## 发布&部署
 

@@ -80,14 +80,13 @@ def article_content(article_id):
     # fetch content
     try:
         content = articles_helper.get_content(article_id)
-        views = articles_helper.update_views(article_id)
     except NoSuchArticleError:
         # 404
         error = no_such_article()
         return jsonify(error), 404
 
     # 200
-    return jsonify(**content, **views), 200
+    return jsonify(content), 200
 
 
 @bp.route('/aid<article_id>/comments', methods=['GET'])
