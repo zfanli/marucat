@@ -139,7 +139,6 @@ def test_get_content(client):
         else:
             r_data = r.get_json()
             assert article_id == r_data['aid']
-            assert 999 == r_data['views']
 
     # 200 below
     # /article/aidT1234
@@ -207,12 +206,11 @@ def test_get_comments(client):
             assert 'application/json' == r.content_type
             # check data
             data = {
-                'id': aid,
-                'comments': 'Test comments',
+                'test_only_aid': aid,
                 'size': e_size,
                 'page': e_page
             }
-            assert data == r.get_json()
+            assert data == r.get_json()[1]
         elif code == 400 or code == 404:
             # check Content-Type
             if aid != '' and '/' not in aid:
