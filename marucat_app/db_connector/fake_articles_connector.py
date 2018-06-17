@@ -22,14 +22,7 @@ class FakeArticlesConnector(object):
 
         fake_data = [
             {
-                'aid': 'ID_OF_ARTICLE',
-                'author': 'THE AUTHOR',
-                'peek': 'A peek of the content of requested article.',
-                'views': 998,
-                # 'likes': 13,
-                'reviews': 8,
-                'tag': ['TAG', 'A', 'B'],
-                'timestamp': 1528969644.344048
+                'content': 'Fake contents'
             },
             {
                 'test_only': 'TESTING',
@@ -52,12 +45,7 @@ class FakeArticlesConnector(object):
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
         return {
-            'aid': article_id,
-            'author': 'THE AUTHOR',
-            'content': 'Full content of requested article.',
-            'views': 999,
-            # 'likes': 32,
-            'timestamp': 1529029508.939738
+            'aid': article_id
         }
 
     @staticmethod
@@ -72,12 +60,7 @@ class FakeArticlesConnector(object):
             raise NoSuchArticleError('No such article.')
         return [
             {
-                'aid': 'ID of article',
-                'cid': 'ID of comment',
-                'from': 'Alice',
-                'to': 'Richard',
-                'body': 'The content of comment',
-                'timestamp': 1529057457.061024
+                'content': 'Fake contents'
             },
             {
                 'test_only_aid': article_id,
