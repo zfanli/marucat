@@ -28,6 +28,7 @@ class FakeArticlesConnector(object):
                 'views': 998,
                 # 'likes': 13,
                 'reviews': 8,
+                'tag': ['TAG', 'A', 'B'],
                 'timestamp': 1528969644.344048
             },
             {

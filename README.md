@@ -136,6 +136,8 @@ Example:
     'content': 'Full content of requested article.',
     # Counts of views
     'views': 241,
+    # Tags of article
+    'tag': ['TAG', 'A', 'B'],
     # Timestamp for created or updated
     'timestamp': 1529029508.939738
 }
@@ -264,13 +266,20 @@ PUT /settings/<items>
     'peek': 'A peek of content.',
     'content': 'The content of article.',
     'views': 999,
+    'tag': ['TAG', 'A', 'B'],
     'comments': [
         {
             'aid': 'ID of article',
             'cid': 'ID of comment',
-            'body': 'Content of comment.'
-        }
-    ]
+            'from': 'From user',
+            'to': 'To user',
+            'body': 'Content of comment.',
+            'timestamp': 1529248843.301676,
+            'deleted': False
+        },
+        # ...
+    ],
+    'timestamp': 1529248869.717813,
     'deleted': False
 }
 ```
