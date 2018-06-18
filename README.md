@@ -8,7 +8,7 @@
 
 ## 定位
 
-> MaruCat is a Back-End service provider of my blog.
+> MaruCat is a Back-End service provider for my blog.
 
 MaruCat 是基于 Python 的博客后台程序。
 
@@ -96,7 +96,7 @@ GET /articles/list?size=10&page=1
 [
     {
         # Article ID
-        'aid': 'ID of article',
+        'aid': 'a12345',
         # Author
         'author': 'AUTHOR',
         # Peek or abstract
@@ -126,7 +126,7 @@ Parameter
     article_id: string, article ID
 
 Example:
-    GET /articles/aid123456
+    GET /articles/aid123456?comment_size=10
 ```
 
 `comments_size` 获取评论数，一般使用默认值。默认值由全局设置中取得，默认为 `10`。
@@ -144,7 +144,7 @@ Example:
 ```python
 {
     # Article ID
-    'aid': 'ID of article',
+    'aid': 'a12345',
     # Author
     'author': 'AUTHOR',
     # Peek or abstract
@@ -259,20 +259,23 @@ Example:
 #### 删除评论
 
 ```
-DELETE /articles/aid<article_id>/comments/<comment_id>
+DELETE /articles/aid<article_id>/comments/cid<comment_id>
 
 Parameter
     article_id: string, article ID
     comment_id: string, comment ID
 
 Example:
-    DELETE /articles/aid12345/comments/c12345
+    DELETE /articles/aid12345/comments/cid12345
 ```
 
 ##### 状态码
 
 * ✔️ 200 OK
     * 正常
+* ✖️ 404 NOT FOUND
+    * article 不存在
+    * comment 不存在
 
 #### 获得专栏列表
 
@@ -366,7 +369,7 @@ PUT /settings/<items>
 ```python
 {
     # Article ID
-    'aid': 'ID of article',
+    'aid': 'a12345',
     # Author
     'author': 'AUTHOR',
     # Peek or abstract
@@ -406,7 +409,9 @@ PUT /settings/<items>
 
 ```python
 {
-
+    'column_id': 'cl1234',
+    'Column_name': 'Customize name',
+    # TODO
 }
 ```
 
