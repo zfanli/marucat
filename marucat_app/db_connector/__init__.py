@@ -49,7 +49,7 @@ class Articles(object):
     def get_content(self, article_id):
         """fetch article content
 
-        :param article_id: identity of article
+        :param article_id: article ID
         """
         return self._connector.get_content(article_id)
 
@@ -57,7 +57,7 @@ class Articles(object):
     def update_views(self, article_id):
         """update the count of views when article was visited
 
-        :param article_id: identity of article
+        :param article_id: article ID
         """
         return self._connector.update_views(article_id)
 
@@ -65,7 +65,7 @@ class Articles(object):
     def get_comments(self, article_id, *, size, page):
         """fetch comments of specific article
 
-        :param article_id: identity of article
+        :param article_id: article ID
         :param size: fetch size
         :param page: fetch start position
         :return: array of comments

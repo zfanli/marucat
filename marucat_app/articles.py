@@ -97,7 +97,7 @@ def article_comments_fetch(article_id):
         size: number, fetch size
         page: number, fetch start position
 
-    :param article_id: identity of article
+    :param article_id: article ID
     :return
         200 normally
         400 invalid query parameters
@@ -145,7 +145,7 @@ def article_comments_fetch(article_id):
 def article_comments_save(article_id):
     """Push comment
 
-    :param article_id: identity of article
+    :param article_id: article ID
     """
 
     # TODO
@@ -158,8 +158,8 @@ def article_comments_save(article_id):
 def article_comments_delete(article_id, comment_id):
     """Delete specific comment
 
-    :param article_id: identity of article
-    :param comment_id: identity of comment
+    :param article_id: article ID
+    :param comment_id: comment ID
     """
 
     # TODO
@@ -176,7 +176,7 @@ def article_comments_delete(article_id, comment_id):
 def article_content_save(article_id):
     """Update article's content
 
-    :param article_id: identity of article
+    :param article_id: article ID
     """
 
     # TODO
@@ -189,7 +189,7 @@ def article_content_save(article_id):
 def article_content_create(article_id):
     """Create article
 
-    :param article_id: identity of article
+    :param article_id: article ID
     """
 
     # TODO
@@ -202,7 +202,7 @@ def article_content_create(article_id):
 def article_content_delete(article_id):
     """Delete article
 
-    :param article_id: identity of article
+    :param article_id: article ID
     """
 
     # TODO

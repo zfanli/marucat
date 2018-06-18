@@ -57,6 +57,7 @@ GET /articles/list
 Query parameters
     size: number, fetch size, 10 by default
     page: number, fetch start position, 1 by default
+    tags: string or strings array, tags 
 
 Example:
     GET /articles/list?size=10&page=1
@@ -74,6 +75,10 @@ GET /articles/list
 GET /articles/list?size=10&page=1
 ```
 
+`size/page` 一般使用默认值。默认值由全局设定中取得，通常为 `10/1`。
+
+`tags` 参数可以是一个字符串或者一个字符串数组，默认为空，即获取所有。
+
 ##### 状态码
 
 * ✔️ 200 OK
@@ -81,24 +86,29 @@ GET /articles/list?size=10&page=1
 * ✖️ 400 BAD REQUEST
     * size/page 非数值
     * size/page 小于等于0
+* ✖️ 404 NOT FOUND
+    * 指定 tags 的文章不存在
+    * 无内容
 
 ##### 数据结构
 
 ```python
 [
-     {
-        # ID
-        'aid': 'ID_OF_ARTICLE',
+    {
+        # Article ID
+        'aid': 'ID of article',
         # Author
-        'author': 'THE AUTHOR',
-        # Abstraction
-        'peek': 'A peek of the content of requested article.',
+        'author': 'AUTHOR',
+        # Peek or abstract
+        'peek': 'A peek of content.',
         # Counts of views
-        'views': 998,
-        # Counts of comments, use reviews because of short
-        'reviews': 8,
-        # Timestamp for created or updated
-        'timestamp': 1528969644.344048
+        'views': 999,
+        # Counts of comments
+        'reviews': 12,
+        # Tags
+        'tags': ['TAG', 'A', 'B'],
+        # Created or updated timestamp
+        'timestamp': 1529248869.717813
     },
     # ...
 ]
@@ -109,12 +119,17 @@ GET /articles/list?size=10&page=1
 ```
 GET /articles/aid<article_id>
 
+Query parameters
+    comments_size: number, fetch comments size, 10 by default
+
 Parameter
-    article_id: string, identity of article
+    article_id: string, article ID
 
 Example:
     GET /articles/aid123456
 ```
+
+`comments_size` 获取评论数，一般使用默认值。默认值由全局设置中取得，默认为 `10`。
 
 ##### 状态码
 
@@ -128,18 +143,36 @@ Example:
 
 ```python
 {
-    # ID
-    'aid': 'ID_OF_ARTICLE',
+    # Article ID
+    'aid': 'ID of article',
     # Author
-    'author': 'THE AUTHOR',
+    'author': 'AUTHOR',
+    # Peek or abstract
+    'peek': 'A peek of content.',
     # Full content
-    'content': 'Full content of requested article.',
+    'content': 'The full content of article.',
     # Counts of views
-    'views': 241,
-    # Tags of article
-    'tag': ['TAG', 'A', 'B'],
-    # Timestamp for created or updated
-    'timestamp': 1529029508.939738
+    'views': 999,
+    # Tags
+    'tags': ['TAG', 'A', 'B'],
+    # Comments
+    'comments': [
+        {
+            # Article ID
+            'aid': 'a12345',
+            # Comment ID
+            'cid': 'c12345',
+            # Who wrote the comment
+            'from': 'From user',
+            # Comment body
+            'body': 'Content of comment.',
+            # Created or updated timestamp
+            'timestamp': 1529248843.301676
+        },
+        # ...
+    ],
+    # Created or updated timestamp
+    'timestamp': 1529248869.717813
 }
 ```
 
@@ -149,7 +182,7 @@ Example:
 GET /articles/aid<article_id>/comments
 
 Parameter
-    article_id: string, identity of article
+    article_id: string, article ID
 
 Query parameters
     size: number, fetch size, 10 by default
@@ -170,21 +203,92 @@ Example:
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
+##### 数据结构
+
+```python
+[
+    {
+        # Article ID
+        'aid': 'a12345',
+        # Comment ID
+        'cid': 'c12345',
+        # Who wrote the comment
+        'from': 'From user',
+        # Comment body
+        'body': 'Content of comment.',
+        # Created or updated timestamp
+        'timestamp': 1529248843.301676
+    },
+    # ...
+]
+```
+
 #### 添加评论
 
 ```
 POST /articles/aid<article_id>/comments
+
+Parameter
+    article_id: string, article ID
+
+Post data
+    aid: string, article ID
+    from: string, user name
+    body: string, comment body
+    timestamp: number, created or updated timestamp
+
+Example:
+    POST /articles/aid12345/comments
+    DATA {
+        "aid": "aid12345",
+        "from": "Richard",
+        "body": "Hi, it's just a comment!",
+        "timestamp": 1529335011.444969
+    }
 ```
 
 ##### 状态码
 
 * ✔️ 201 CREATED
     * 正常
+* ✖️ 400 BAD REQUEST
+    * data 不合要求/缺少关键信息
+* ✖️ 404 NOT FOUND
+    * article 不存在
 
 #### 删除评论
 
 ```
-DELETE /articles/aid<article_id>/comments
+DELETE /articles/aid<article_id>/comments/<comment_id>
+
+Parameter
+    article_id: string, article ID
+    comment_id: string, comment ID
+
+Example:
+    DELETE /articles/aid12345/comments/c12345
+```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
+
+#### 获得专栏列表
+
+```
+GET /columns/list
+```
+
+##### 状态码
+
+* ✔️ 200 OK
+    * 正常
+
+#### 获得指定专栏内容
+
+```
+GET /columns/<column_id>
 ```
 
 ##### 状态码
@@ -257,30 +361,52 @@ PUT /settings/<items>
 
 ### Models
 
-#### Articles
+#### Articles & Comments
 
 ```python
 {
+    # Article ID
     'aid': 'ID of article',
+    # Author
     'author': 'AUTHOR',
+    # Peek or abstract
     'peek': 'A peek of content.',
-    'content': 'The content of article.',
+    # Full content
+    'content': 'The full content of article.',
+    # Counts of views
     'views': 999,
-    'tag': ['TAG', 'A', 'B'],
+    # Tags
+    'tags': ['TAG', 'A', 'B'],
+    # Comments
     'comments': [
         {
-            'aid': 'ID of article',
-            'cid': 'ID of comment',
+            # Article ID
+            'aid': 'a12345',
+            # Comment ID
+            'cid': 'c12345',
+            # Who wrote the comment
             'from': 'From user',
-            'to': 'To user',
+            # Comment body
             'body': 'Content of comment.',
+            # Created or updated timestamp
             'timestamp': 1529248843.301676,
+            # Deleted flag
             'deleted': False
         },
         # ...
     ],
+    # Created or updated timestamp
     'timestamp': 1529248869.717813,
+    # Deleted flag
     'deleted': False
+}
+```
+
+#### Columns
+
+```python
+{
+
 }
 ```
 

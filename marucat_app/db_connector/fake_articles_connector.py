@@ -40,7 +40,7 @@ class FakeArticlesConnector(object):
         Every times fetch the content of article,
         update the counts of views.
 
-        :param article_id: identity of article
+        :param article_id: article ID
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
@@ -52,7 +52,7 @@ class FakeArticlesConnector(object):
     def get_comments(article_id, *, size, page):
         """get article content
 
-        :param article_id: identity of article
+        :param article_id: article ID
         :param size: fetch size
         :param page: fetch start position
         """
