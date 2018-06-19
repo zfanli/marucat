@@ -8,7 +8,7 @@ class NoSuchArticleError(RuntimeError):
     pass
 
 
-class DatabaseDoNotExistError(RuntimeError):
+class DatabaseNotExistError(RuntimeError):
     pass
 
 

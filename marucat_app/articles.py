@@ -5,12 +5,11 @@
 
 from flask import Blueprint, current_app, jsonify, request
 
-from marucat_app.errors import NoSuchArticleError, NotANumberError
-from marucat_app.marucat_utils import (convert_and_check_number_gt_zero,
-                                       get_db_helper,
-                                       is_special_characters_contained,
-                                       no_such_article, not_a_number,
-                                       not_greater_than_zero)
+from marucat_app.utils.errors import NoSuchArticleError, NotANumberError
+from marucat_app.utils.utils import (convert_and_check_number_gt_zero,
+                                     get_db_helper, has_special_characters,
+                                     no_such_article, not_a_number,
+                                     not_greater_than_zero)
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -24,12 +23,9 @@ def articles_list_fetch():
     """Fetch articles list
 
     Query parameters
-        size: number, fetch size
-        page: number, fetch start position
-
-    Request without query parameters will use the default value,
-    the request of GET /articles/list,
-    equals to GET /articles/list?size=10&page=1
+        size: number, fetch size, 10 by default
+        page: number, fetch start position, 1 by default
+        tags: string or strings array, tags
 
     :return
         200 normally
@@ -70,7 +66,7 @@ def article_content(article_id):
     """
 
     # check is the provided article id contains a special characters or not
-    if is_special_characters_contained(article_id):
+    if has_special_characters(article_id):
         # 404
         error = no_such_article()
         return jsonify(error), 404
@@ -105,7 +101,7 @@ def article_comments_fetch(article_id):
     """
 
     # check is the provided article id contains a special characters or not
-    if is_special_characters_contained(article_id):
+    if has_special_characters(article_id):
         # 404
         error = no_such_article()
         return jsonify(error), 404
