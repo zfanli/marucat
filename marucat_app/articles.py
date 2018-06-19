@@ -6,10 +6,14 @@
 from flask import Blueprint, current_app, jsonify, request
 
 from marucat_app.utils.errors import NoSuchArticleError, NotANumberError
-from marucat_app.utils.utils import (convert_and_check_number_gt_zero,
-                                     get_db_helper, has_special_characters,
-                                     no_such_article, not_a_number,
-                                     not_greater_than_zero)
+from marucat_app.utils.utils import (
+    get_db_helper, has_special_characters
+)
+from marucat_app.utils.utils_wrapper import convert_and_check_positive_number
+from marucat_app.utils.utils_wrapper import (
+    no_such_article, not_a_number,
+    not_greater_than_zero
+)
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -36,7 +40,7 @@ def articles_list_fetch():
 
     # convert to number and checking
     try:
-        size, page = convert_and_check_number_gt_zero(size, page)
+        size, page = convert_and_check_positive_number(size, page)
     except NotANumberError:
         # not a number
         error = not_a_number('size/page')
@@ -111,7 +115,7 @@ def article_comments_fetch(article_id):
 
     # convert to number and checking
     try:
-        size, page = convert_and_check_number_gt_zero(size, page)
+        size, page = convert_and_check_positive_number(size, page)
     except NotANumberError:
         # not a number
         error = not_a_number('size/page')
@@ -146,6 +150,7 @@ def article_comments_save(article_id):
 
     # TODO
 
+    print(article_id)
     data = request.get_json()
     return jsonify(data), 200
 

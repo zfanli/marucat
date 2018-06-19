@@ -142,7 +142,7 @@ Example:
 ##### 数据结构
 
 ```python
-{
+data = {
     # Article ID
     'aid': 'a12345',
     # Author

@@ -7,7 +7,7 @@ from logging import basicConfig, ERROR
 
 from flask import Flask, jsonify
 
-from marucat_app.db_connector import ConnectorCreator
+from marucat_app.database_helper import ConnectorCreator
 from marucat_app.articles import bp as articles
 from marucat_app.utils.utils import (
     create_error_message, CONNECTOR_FACTORY, APP_NAME

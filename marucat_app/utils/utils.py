@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Utils module for constants and common functions"""
+"""Utils"""
 
 import re
 
@@ -21,37 +21,10 @@ def get_db_helper(app, name):
     return getattr(c, name)
 
 
-# Creating messages
-
 def create_error_message(message='Error was happened.'):
     """Create a error object(dict)"""
     return {'error': message}
 
-
-def not_a_number(name):
-    """Not a number error message"""
-    return create_error_message(
-        'Invalid query parameters. {} must be a number.'.format(
-            name
-        )
-    )
-
-
-def not_greater_than_zero(name):
-    """Less than zero or equals to 0 error message"""
-    return create_error_message(
-        'Invalid query parameters. {} must be greater than 0.'.format(
-            name
-        )
-    )
-
-
-def no_such_article():
-    """No such article"""
-    return create_error_message('Specified article does not exists.')
-
-
-# Conversion and checking utils
 
 def convert_to_number(*arr):
     """Convert all elements of the arr to number
@@ -61,10 +34,10 @@ def convert_to_number(*arr):
 
     Raise a NotANumber error when a element cannot convert to number.
     """
-    r = [None for x in range(len(arr))]
+    r = []
     try:
         for i in range(len(arr)):
-            r[i] = int(arr[i])
+            r.append(int(arr[i]))
     except ValueError:
         raise NotANumberError(
             'Parameters contains a element which is not a number.'
@@ -74,16 +47,12 @@ def convert_to_number(*arr):
     return r
 
 
-def check_number_greater_than_zero(*arr):
+def is_positive_number(*arr):
+    """Check is the numbers a natural number, just mean is it greater than 0."""
     for n in arr:
         if n <= 0:
-            raise ValueError('Number must be greater than 0.')
-
-
-def convert_and_check_number_gt_zero(*arr):
-    c = convert_to_number(*arr)
-    check_number_greater_than_zero(*c)
-    return c
+            return False
+    return True
 
 
 def has_special_characters(target):

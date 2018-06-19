@@ -6,7 +6,6 @@
 from logging import DEBUG
 
 import pytest
-from flask.testing import FlaskClient
 
 from marucat_app import create_app
 
