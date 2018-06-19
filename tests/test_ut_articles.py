@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""Unit tests about API of articles"""
+"""Unit tests about articles' API"""
 
 from logging import DEBUG
 
 import pytest
+from flask.testing import FlaskClient
 
 from marucat_app import create_app
 

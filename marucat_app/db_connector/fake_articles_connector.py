@@ -3,7 +3,7 @@
 
 """A fake db connector just for testing"""
 
-from marucat_app.errors import NoSuchArticleError
+from marucat_app.utils.errors import NoSuchArticleError
 
 
 class FakeArticlesConnector(object):

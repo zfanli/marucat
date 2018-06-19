@@ -5,7 +5,7 @@
 
 import re
 
-from marucat_app.errors import NotANumberError
+from marucat_app.utils.errors import NotANumberError
 
 APP_NAME = 'marucat_app'
 CONNECTOR_FACTORY = 'connector_factory'
@@ -86,7 +86,7 @@ def convert_and_check_number_gt_zero(*arr):
     return c
 
 
-def is_special_characters_contained(target):
+def has_special_characters(target):
     """Check if the string contains a special characters list below"""
     pattern = r'[`~!@#$%^&*()=_\-\+<>?:"{},./;\'\[\]]'
     return bool(re.search(pattern, target))
@@ -112,4 +112,4 @@ if __name__ == '__main__':
     convert_error('a')
     convert_error('123', 'a')
 
-    assert not is_special_characters_contained('T123')
+    assert not has_special_characters('T123')
