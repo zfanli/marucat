@@ -10,7 +10,7 @@ class FakeArticlesConnector(object):
     """A fake API for testing"""
 
     @staticmethod
-    def get_list(*, size, page):
+    def get_list(*, size, page, tags=None):
         """Fetch articles' list
 
         If 'size x page' is greater than actually counts of articles,
@@ -27,7 +27,8 @@ class FakeArticlesConnector(object):
             {
                 'test_only': 'TESTING',
                 'size': size,
-                'page': page
+                'page': page,
+                'tags': tags
             }
         ]
 

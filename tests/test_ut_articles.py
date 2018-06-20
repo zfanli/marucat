@@ -20,12 +20,13 @@ def client():
 def test_get_list(client):
     """Test fetch list"""
 
-    def perform_get_list(input_val, expect_val, code=200):
+    def perform_get_list(input_val, expect_val, code=200, tags=None):
         """test template
 
         :param input_val: inputted values (size, page)
         :param expect_val: the expected result (size, page)
         :param code: expected status code
+        :param tags: tags
         """
         # get inputted size and page
         size, page = input_val if input_val else (None, None)
@@ -57,7 +58,8 @@ def test_get_list(client):
             fake_data = {
                 'test_only': 'TESTING',
                 'size': e_size,
-                'page': e_page
+                'page': e_page,
+                'tags': tags
             }
             assert fake_data == r.get_json()[1]
         elif 400 == code:

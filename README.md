@@ -87,8 +87,7 @@ GET /articles/list?size=10&page=1
     * size/page 非数值
     * size/page 小于等于0
 * ✖️ 404 NOT FOUND
-    * 指定 tags 的文章不存在
-    * 无内容
+    * 无内容（指定 tags 下）
 
 ##### 数据结构
 

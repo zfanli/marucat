@@ -37,13 +37,13 @@ class Articles(object):
         self._connector = articles_connector
 
     @log
-    def get_list(self, *, size, page):
+    def get_list(self, *, size, page, tags):
         """fetch articles list
 
         :param size: fetch size
         :param page: fetch start position
         """
-        return self._connector.get_list(size=size, page=page)
+        return self._connector.get_list(size=size, page=page, tags=tags)
 
     @log
     def get_content(self, article_id):

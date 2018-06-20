@@ -7,18 +7,20 @@ from flask import Blueprint, current_app, jsonify, request
 
 from marucat_app.utils.errors import NoSuchArticleError, NotANumberError
 from marucat_app.utils.utils import (
-    get_db_helper, has_special_characters
+    get_db_helper, has_special_characters,
+    convert_string_to_list
 )
-from marucat_app.utils.utils_wrapper import convert_and_check_positive_number
 from marucat_app.utils.utils_wrapper import (
+    convert_and_check_positive_number,
     no_such_article, not_a_number,
-    not_greater_than_zero
+    not_a_positive_number,
+    articles_list_not_found
 )
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
 
-# the name of article's db helper
+# Articles' Database helper's key
 ARTICLES_HELPER = 'articles_connector'
 
 
@@ -35,10 +37,12 @@ def articles_list_fetch():
         200 normally
         400 invalid query parameters
     """
+
+    # get parameters from request
     size = request.args.get('size', 10)
     page = request.args.get('page', 1)
 
-    # convert to number and checking
+    # convert to number and check parameters
     try:
         size, page = convert_and_check_positive_number(size, page)
     except NotANumberError:
@@ -47,13 +51,24 @@ def articles_list_fetch():
         return jsonify(error), 400
     except ValueError:
         # values <= 0
-        error = not_greater_than_zero('size/page')
+        error = not_a_positive_number('size/page')
         return jsonify(error), 400
+
+    # get tags from request
+    tags = request.args.get('tags')
+    # convert tags to list when it is not a None
+    if tags is not None:
+        tags = convert_string_to_list(tags)
 
     articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch list
-    a_list = articles_helper.get_list(size=size, page=page)
+    a_list = articles_helper.get_list(size=size, page=page, tags=tags)
+
+    # if nothing was found raise 404 error
+    if a_list is None:
+        error = articles_list_not_found(tags)
+        return jsonify(error), 404
 
     # 200
     return jsonify(a_list), 200
@@ -122,7 +137,7 @@ def article_comments_fetch(article_id):
         return jsonify(error), 400
     except ValueError:
         # values <= 0
-        error = not_greater_than_zero('size/page')
+        error = not_a_positive_number('size/page')
         return jsonify(error), 400
 
     articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
@@ -169,8 +184,8 @@ def article_comments_delete(article_id, comment_id):
     return jsonify(r), 200
 
 
-# Pending apis below.
-# Those apis might not be implemented.
+# Pending api below.
+# Those api might not be implemented.
 # Just placeholders for now.
 
 @bp.route('/aid<article_id>', methods=['PUT'])
