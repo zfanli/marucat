@@ -26,6 +26,7 @@ def create_app(*, level=ERROR, db='mongodb'):
     app = Flask(APP_NAME)
 
     app.config[CONNECTOR_FACTORY] = ConnectorCreator(db)
+    app.url_map.strict_slashes = False
 
     @app.route('/')
     def _hello():
