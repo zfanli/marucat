@@ -55,8 +55,8 @@ def articles_list_not_found(tags):
     """Create a error message describe the articles list is None.
 
     Message
-        Can not found any articles. (if tags is None)
-        Can not found any articles tagged by {tags}. (if tags is not None)
+        - Can not found any articles. (if tags is None)
+        - Can not found any articles tagged by {tags}. (if tags is not None)
 
     :param tags: tags
     :return: error message dict

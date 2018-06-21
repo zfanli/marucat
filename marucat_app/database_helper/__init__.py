@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""DB connector API define here"""
+"""DB connector API defined here"""
 
 from functools import wraps
 from logging import getLogger
 
-from marucat_app.database_helper.fake_articles_connector import \
-    FakeArticlesConnector
+from marucat_app.database_helper.fake_articles_connector import FakeArticlesConnector
 from marucat_app.utils.errors import DatabaseNotExistError
 
 logger = getLogger()
 
 
 def log(func):
+    """Decorator for logging
+
+    Tell you the when function was called and show it's parameters.
+
+    :param func: target function
+    :return: decorator
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
@@ -28,11 +34,16 @@ def log(func):
             ) if not kwargs == {} or not args[1:] == () else ''
         ))
         return result
+
     return wrapper
 
 
 class Articles(object):
-    """All API about articles"""
+    """All API about articles
+
+    Database manipulator about articles.
+    """
+
     def __init__(self, articles_connector):
         self._connector = articles_connector
 
@@ -42,16 +53,18 @@ class Articles(object):
 
         :param size: fetch size
         :param page: fetch start position
+        :param tags: tags
         """
         return self._connector.get_list(size=size, page=page, tags=tags)
 
     @log
-    def get_content(self, article_id):
+    def get_content(self, article_id, *, comments_size):
         """fetch article content
 
         :param article_id: article ID
+        :param comments_size: fetch comments size
         """
-        return self._connector.get_content(article_id)
+        return self._connector.get_content(article_id, comments_size=comments_size)
 
     @log
     def update_views(self, article_id):
@@ -68,14 +81,22 @@ class Articles(object):
         :param article_id: article ID
         :param size: fetch size
         :param page: fetch start position
-        :return: array of comments
+        :return: list of comments
         """
         return self._connector.get_comments(article_id, size=size, page=page)
 
 
 class ConnectorCreator(object):
-    """Create connector"""
+    """Create connector
+
+    Use to instance a database helper.
+    """
+
     def __init__(self, db):
+        """Initial database connection
+
+        :param db: specified database
+        """
         if db == 'test':
             # TEST mode load fake db helper
             self._articles = Articles(FakeArticlesConnector())
@@ -99,7 +120,7 @@ class ConnectorCreator(object):
         self._articles = Articles(FakeArticlesConnector())
 
     @property
-    def articles_connector(self):
+    def articles_helper(self):
         return self._articles
 
 

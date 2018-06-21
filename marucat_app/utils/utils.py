@@ -34,7 +34,7 @@ def convert_to_number(*arr):
     """Convert all elements of the arr to number
 
     :param arr: array of elements which will be converted to number
-    :return the result of conversion
+    :return: the result of conversion
 
     Raise a NotANumber error when a element cannot convert to number.
     """

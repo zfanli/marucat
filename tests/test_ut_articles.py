@@ -156,7 +156,7 @@ def test_get_content(client):
 
     # special characters
     perform_get_content('/', 404)
-    perform_get_content('abc/', 404)
+    perform_get_content('abc/ ', 404)
     perform_get_content('abc/123', 404)
     perform_get_content('asd&123', 404)
     perform_get_content('asd+123', 404)

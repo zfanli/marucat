@@ -21,7 +21,7 @@ from marucat_app.utils.utils_wrapper import (
 bp = Blueprint('articles', __name__, url_prefix='/articles')
 
 # Articles' Database helper's key
-ARTICLES_HELPER = 'articles_connector'
+ARTICLES_HELPER = 'articles_helper'
 
 
 @bp.route('/list', methods=['GET'])
@@ -29,13 +29,14 @@ def articles_list_fetch():
     """Fetch articles list
 
     Query parameters
-        size: number, fetch size, 10 by default
-        page: number, fetch start position, 1 by default
-        tags: string or strings array, tags
+        - size: number, fetch size, 10 by default
+        - page: number, fetch start position, 1 by default
+        - tags: string or strings array, tags
 
     :return
-        200 normally
-        400 invalid query parameters
+        - 200 normally
+        - 400 invalid query parameters
+        - 404 not found
     """
 
     # get parameters from request
@@ -50,7 +51,7 @@ def articles_list_fetch():
         error = not_a_number('size/page')
         return jsonify(error), 400
     except ValueError:
-        # values <= 0
+        # not a positive number
         error = not_a_positive_number('size/page')
         return jsonify(error), 400
 
@@ -60,6 +61,7 @@ def articles_list_fetch():
     if tags is not None:
         tags = convert_string_to_list(tags)
 
+    # get articles helper
     articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch list
@@ -78,11 +80,29 @@ def articles_list_fetch():
 def article_content(article_id):
     """Fetch article's content by id
 
+    Query parameter
+        comment_sizes: number, fetch comments size
+
     :param article_id: string, the id of article
-    :return
-        200 normally
-        404 article does not exist
+    :return:
+        - 200 normally
+        - 400 invalid query parameter
+        - 404 not found
     """
+
+    # get comments size
+    comments_size = request.args.get('comments_size', 10)
+    # convert and check number
+    try:
+        comments_size = convert_and_check_positive_number(comments_size)
+    except NotANumberError:
+        # not a number
+        error = not_a_number('comments_size')
+        return jsonify(error), 400
+    except ValueError:
+        # not a positive number
+        error = not_a_positive_number('comments_size')
+        return jsonify(error), 400
 
     # check is the provided article id contains a special characters or not
     if has_special_characters(article_id):
@@ -94,7 +114,7 @@ def article_content(article_id):
 
     # fetch content
     try:
-        content = articles_helper.get_content(article_id)
+        content = articles_helper.get_content(article_id, comments_size=comments_size)
     except NoSuchArticleError:
         # 404
         error = no_such_article()
@@ -109,14 +129,14 @@ def article_comments_fetch(article_id):
     """Fetch article's comments by id
 
     Query parameters
-        size: number, fetch size
-        page: number, fetch start position
+        - size: number, fetch size
+        - page: number, fetch start position
 
     :param article_id: article ID
-    :return
-        200 normally
-        400 invalid query parameters
-        404 article does not exist
+    :return:
+        - 200 normally
+        - 400 invalid query parameters
+        - 404 article does not exist
     """
 
     # check is the provided article id contains a special characters or not
@@ -159,6 +179,14 @@ def article_comments_fetch(article_id):
 @bp.route('/aid<article_id>/comments', methods=['POST'])
 def article_comments_save(article_id):
     """Push comment
+
+    The request's content-type should be **application/json**
+
+    Post Data
+        - from: from user
+        - body: body of comment
+        - reply_to: reply to user
+        - timestamp: created or updated timestamp
 
     :param article_id: article ID
     """

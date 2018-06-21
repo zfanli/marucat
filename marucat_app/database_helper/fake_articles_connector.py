@@ -18,6 +18,7 @@ class FakeArticlesConnector(object):
 
         :param size: length of list
         :param page: start position of list, start by 1
+        :param tags: tags
         """
 
         fake_data = [
@@ -35,18 +36,20 @@ class FakeArticlesConnector(object):
         return fake_data
 
     @staticmethod
-    def get_content(article_id):
+    def get_content(article_id, *, comments_size):
         """Fetch article content
 
         Every times fetch the content of article,
         update the counts of views.
 
         :param article_id: article ID
+        :param comments_size: fetch comments size
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
         return {
-            'aid': article_id
+            'aid': article_id,
+            'comments_size': comments_size
         }
 
     @staticmethod
