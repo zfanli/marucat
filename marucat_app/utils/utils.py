@@ -93,5 +93,34 @@ def convert_string_to_list(target):
     return target
 
 
+def is_contained(target, keys):
+    """Check is the target json object contained specified keys
+
+    :param target: target json object
+    :param keys: keys
+    :return: True if all of keys contained or False if anyone is not contained
+    Invalid parameters is always return False.
+    """
+
+    if not target or not keys:
+        return False
+
+    # if keys is just a string convert it to a list
+    if type(keys) == str:
+        keys = [keys]
+
+    # traverse the list to check json object
+    # if key does not exist or value is None then return False
+    try:
+        for key in keys:
+            if target[key] is None:
+                return False
+    except KeyError:
+        return False
+
+    # All seems to be going well
+    return True
+
+
 if __name__ == '__main__':
     pass

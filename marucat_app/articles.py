@@ -8,12 +8,12 @@ from flask import Blueprint, current_app, jsonify, request
 from marucat_app.utils.errors import NoSuchArticleError, NotANumberError
 from marucat_app.utils.utils import (
     get_db_helper, has_special_characters,
-    convert_string_to_list
+    convert_string_to_list, is_contained
 )
 from marucat_app.utils.utils_wrapper import (
     convert_and_check_positive_number,
     no_such_article, not_a_number,
-    not_a_positive_number,
+    not_a_positive_number, invalid_post_data,
     articles_list_not_found
 )
 
@@ -185,7 +185,7 @@ def article_comments_save(article_id):
     Post Data
         - from: from user
         - body: body of comment
-        - reply_to: reply to user
+        - reply_id: comment ID for reply to, *not necessary*
         - timestamp: created or updated timestamp
 
     :param article_id: article ID
@@ -194,7 +194,15 @@ def article_comments_save(article_id):
     # TODO
 
     print(article_id)
+
+    # get post data
     data = request.get_json()
+    # check attributes
+    keys = ['from', 'body', 'timestamp']
+    if not is_contained(data, keys):
+        error = invalid_post_data(keys)
+        return jsonify(error), 400
+
     return jsonify(data), 200
 
 

@@ -231,17 +231,17 @@ Parameter
     article_id: string, article ID
 
 Post data
-    aid: string, article ID
     from: string, user name
     body: string, comment body
+    reply_id: string, comment ID for reply to, not necessary
     timestamp: number, created or updated timestamp
 
 Example:
     POST /articles/aid12345/comments
     DATA {
-        "aid": "aid12345",
         "from": "Richard",
         "body": "Hi, it's just a comment!",
+        "reply_id": "cid12345",
         "timestamp": 1529335011.444969
     }
 ```

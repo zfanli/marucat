@@ -51,6 +51,22 @@ def no_such_article():
     return create_error_message('Specified article does not exist.')
 
 
+def invalid_post_data(keys):
+    """Create a error message describe the post data is invalid.
+
+     Message
+        Specified article does not exist.
+
+    :return: error message dict
+    """
+    return create_error_message(
+        'Invalid post data. '
+        'The data should be a json object and contained these attributes: {}'.format(
+            keys
+        )
+    )
+
+
 def articles_list_not_found(tags):
     """Create a error message describe the articles list is None.
 
