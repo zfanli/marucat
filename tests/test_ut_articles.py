@@ -254,14 +254,87 @@ def test_get_comments(client):
     perform_get_comments('T123', (-91, 11), None, 400)
 
     # method not allowed
-    rv = client.put('/articles/aidT123/comment')
-    assert 404 == rv.status_code
+    rv = client.put('/articles/aidT123/comments')
+    assert 405 == rv.status_code
 
 
 def test_post_comments(client):
 
-    rv = client.post(
-        'articles/aid1234/comments',
-        json={'test': 1234}
-    )
-    print(rv.data)
+    def perform_post_comments(article_id, data, code=201):
+
+        url = '/articles/aid{}/comments'.format(article_id)
+        r = client.post(url, json=data)
+
+        print(url, r.status_code)
+
+        assert code == r.status_code
+        if code == 404 or code == 400:
+            assert 'application/json' == r.content_type
+            assert r.get_json()['error'] is not None
+
+    normally_data = {
+        'from': 'Richard',
+        'body': 'Ok!',
+        'timestamp': 1529658047.974455
+    }
+
+    # normally
+    perform_post_comments('1234', normally_data)
+    # invalid article ID
+    perform_post_comments('123$123', normally_data, 404)
+    perform_post_comments('123"123', normally_data, 404)
+    perform_post_comments('123+123', normally_data, 404)
+    perform_post_comments('123-123', normally_data, 404)
+    perform_post_comments("123'123", normally_data, 404)
+    # invalid post data
+    perform_post_comments('test1234', {'from': 'a', 'body': 'b'}, 400)
+    perform_post_comments('test1234', {'timestamp': 'a', 'body': 'b'}, 400)
+    perform_post_comments('test1234', {'timestamp': 'a', 'from': 'b'}, 400)
+    # reply to ok
+    perform_post_comments('asd123123', {**normally_data, 'reply_to': '12412'})
+
+
+def test_delete_comment(client):
+
+    def perform_delete_comment(article_id, comment_id, code=200):
+
+        url = '/articles/aid{}/comments/{}'.format(
+            article_id, comment_id
+        )
+
+        r = client.delete(url)
+
+        print(url, r.status_code)
+
+        assert code == r.status_code
+        if code == 404:
+            assert 'application/json' == r.content_type
+            assert r.get_json()['error'] is not None
+
+    # normally
+    perform_delete_comment('aid1234', 'cid1234')
+    # bad article ID
+    perform_delete_comment('aid+123', 'cid456', 404)
+    perform_delete_comment('aid-123', 'cid456', 404)
+    perform_delete_comment('aid*123', 'cid456', 404)
+    perform_delete_comment(r'aid\123', 'cid456', 404)
+    perform_delete_comment('aid"123', 'cid456', 404)
+    perform_delete_comment('aid123%', 'cid456', 404)
+    # perform_delete_comment('aid#123', 'cid456', 404)
+    # perform_delete_comment('aid123#', 'cid456', 404)
+    perform_delete_comment('aid@123', 'cid456', 404)
+    perform_delete_comment('aid&123', 'cid456', 404)
+    perform_delete_comment("aid'123", 'cid456', 404)
+    # bad comment ID
+    perform_delete_comment('aid1234', 'cid~123', 404)
+    perform_delete_comment('aid1234', 'cid!123', 404)
+    perform_delete_comment('aid1234', 'cid@123', 404)
+    perform_delete_comment('aid1234', 'cid$123', 404)
+    perform_delete_comment('aid1234', 'cid123%', 404)
+    perform_delete_comment('aid1234', 'cid^123', 404)
+    perform_delete_comment('aid1234', 'cid&123', 404)
+    perform_delete_comment('aid1234', 'cid*123', 404)
+    perform_delete_comment('aid1234', 'cid(123', 404)
+    perform_delete_comment('aid1234', 'cid)123', 404)
+    perform_delete_comment('aid1234', 'cid[123', 404)
+    perform_delete_comment('aid1234', 'cid]123', 404)

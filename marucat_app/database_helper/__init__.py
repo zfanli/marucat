@@ -85,6 +85,26 @@ class Articles(object):
         """
         return self._connector.get_comments(article_id, size=size, page=page)
 
+    @log
+    def post_comment(self, article_id, *, data):
+        """Post new comment
+
+        Post data should be checked before this method.
+
+        :param article_id: article ID
+        :param data: json data
+        """
+        self._connector.post_comment(article_id, data=data)
+
+    @log
+    def delete_comment(self, article_id, comment_id):
+        """Delete a comment
+
+        :param article_id: article ID
+        :param comment_id: comment ID
+        """
+        self._connector.delete_comment(article_id, comment_id)
+
 
 class ConnectorCreator(object):
     """Create connector

@@ -51,6 +51,17 @@ def no_such_article():
     return create_error_message('Specified article does not exist.')
 
 
+def no_such_comment():
+    """Create a error message describe that the comment does not exist.
+
+     Message
+        Specified comment does not exist.
+
+    :return: error message dict
+    """
+    return create_error_message('Specified comment does not exist.')
+
+
 def invalid_post_data(keys):
     """Create a error message describe the post data is invalid.
 
@@ -84,10 +95,12 @@ def articles_list_not_found(tags):
 
 
 def convert_and_check_positive_number(*arr):
-    """Convert and check whether the elements of target array are all
-        positive number or not.
+    """Convert and check the parameters
 
-    :param arr: target array
+    Try to convert all of the parameters to number,
+    and check if they are positive number.
+
+    :param arr: target list
     :return: result of convert
     """
 

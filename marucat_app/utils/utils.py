@@ -67,12 +67,12 @@ def has_special_characters(target):
     """Check whether the target strings contained a special characters or not.
 
     Definition of special characters
-        `~!@#$%^&*()=_-+<>?:"{},./;'[]
+        `~!@#$%^&*()=_-+<>?:"{},./;'[]\
 
     :param target: test strings
     :return: True if contained or False if not
     """
-    pattern = r'[`~!@#$%^&*()=_\-\+<>?:"{},./;\'\[\]]'
+    pattern = r'[`~!@#$%^&*()=_\-\+<>?:"{},./;\'\[\]\\]'
     return bool(re.search(pattern, target))
 
 

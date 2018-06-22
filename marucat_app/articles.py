@@ -5,14 +5,17 @@
 
 from flask import Blueprint, current_app, jsonify, request
 
-from marucat_app.utils.errors import NoSuchArticleError, NotANumberError
+from marucat_app.utils.errors import (
+    NoSuchArticleError, NotANumberError,
+    NoSuchCommentError
+)
 from marucat_app.utils.utils import (
     get_db_helper, has_special_characters,
     convert_string_to_list, is_contained
 )
 from marucat_app.utils.utils_wrapper import (
     convert_and_check_positive_number,
-    no_such_article, not_a_number,
+    no_such_article, not_a_number, no_such_comment,
     not_a_positive_number, invalid_post_data,
     articles_list_not_found
 )
@@ -39,11 +42,11 @@ def articles_list_fetch():
         - 404 not found
     """
 
-    # get parameters from request
+    # get request parameters
     size = request.args.get('size', 10)
     page = request.args.get('page', 1)
 
-    # convert to number and check parameters
+    # try to convert parameters to number and do some check
     try:
         size, page = convert_and_check_positive_number(size, page)
     except NotANumberError:
@@ -57,7 +60,7 @@ def articles_list_fetch():
 
     # get tags from request
     tags = request.args.get('tags')
-    # convert tags to list when it is not a None
+    # convert tags to list if it is not a None
     if tags is not None:
         tags = convert_string_to_list(tags)
 
@@ -67,7 +70,7 @@ def articles_list_fetch():
     # fetch list
     a_list = articles_helper.get_list(size=size, page=page, tags=tags)
 
-    # if nothing was found raise 404 error
+    # 404 not found
     if a_list is None:
         error = articles_list_not_found(tags)
         return jsonify(error), 404
@@ -92,7 +95,7 @@ def article_content(article_id):
 
     # get comments size
     comments_size = request.args.get('comments_size', 10)
-    # convert and check number
+    # convert and check
     try:
         comments_size = convert_and_check_positive_number(comments_size)
     except NotANumberError:
@@ -104,7 +107,7 @@ def article_content(article_id):
         error = not_a_positive_number('comments_size')
         return jsonify(error), 400
 
-    # check is the provided article id contains a special characters or not
+    # check if the article ID contains special characters
     if has_special_characters(article_id):
         # 404
         error = no_such_article()
@@ -136,7 +139,7 @@ def article_comments_fetch(article_id):
     :return:
         - 200 normally
         - 400 invalid query parameters
-        - 404 article does not exist
+        - 404 not found
     """
 
     # check is the provided article id contains a special characters or not
@@ -191,9 +194,11 @@ def article_comments_save(article_id):
     :param article_id: article ID
     """
 
-    # TODO
-
-    print(article_id)
+    # check if the article ID contains special characters
+    if has_special_characters(article_id):
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
 
     # get post data
     data = request.get_json()
@@ -203,7 +208,16 @@ def article_comments_save(article_id):
         error = invalid_post_data(keys)
         return jsonify(error), 400
 
-    return jsonify(data), 200
+    # get articles helper
+    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+
+    try:
+        articles_helper.post_comment(article_id, data=data)
+    except NoSuchArticleError:
+        error = no_such_article()
+        return jsonify(error), 404
+
+    return '', 201
 
 
 @bp.route('/aid<article_id>/comments/<comment_id>', methods=['DELETE'])
@@ -213,11 +227,33 @@ def article_comments_delete(article_id, comment_id):
     :param article_id: article ID
     :param comment_id: comment ID
     """
+    # check if the article ID contains special characters
+    if has_special_characters(article_id):
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
+    # check if the comment ID contains special characters
+    if has_special_characters(comment_id):
+        # 404
+        error = no_such_comment()
+        return jsonify(error), 404
 
-    # TODO
+    # get articles helper
+    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
 
-    r = {'article_id': article_id, 'comment_id': comment_id}
-    return jsonify(r), 200
+    try:
+        articles_helper.delete_comment(article_id, comment_id)
+    except NoSuchArticleError:
+        # 404
+        error = no_such_article()
+        return jsonify(error), 404
+    except NoSuchCommentError:
+        # 404
+        error = no_such_comment()
+        return jsonify(error), 404
+
+    # everything are going well
+    return '', 200
 
 
 # Pending api below.

@@ -8,6 +8,10 @@ class NoSuchArticleError(RuntimeError):
     pass
 
 
+class NoSuchCommentError(RuntimeError):
+    pass
+
+
 class DatabaseNotExistError(RuntimeError):
     pass
 

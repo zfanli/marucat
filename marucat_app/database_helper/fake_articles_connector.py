@@ -3,7 +3,16 @@
 
 """A fake db connector just for testing"""
 
-from marucat_app.utils.errors import NoSuchArticleError
+from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
+
+
+def do_something(*obj):
+    """Do something with the parameters.
+
+    :param obj:
+    :return: None
+    """
+    print(obj)
 
 
 class FakeArticlesConnector(object):
@@ -72,3 +81,29 @@ class FakeArticlesConnector(object):
                 'size': size
             }
         ]
+
+    @staticmethod
+    def post_comment(article_id, *, data):
+        """Post new comment
+
+        :param article_id: article ID
+        :param data: comment data
+        """
+
+        if article_id == 'TEST_NOT_FOUND':
+            raise NoSuchArticleError('No such article.')
+
+        do_something(data)
+
+    @staticmethod
+    def delete_comment(article_id, comment_id):
+        """Delete a comment
+
+        :param article_id:
+        :param comment_id:
+        """
+
+        if article_id == 'TEST_NOT_FOUND':
+            raise NoSuchArticleError('No such article.')
+        if comment_id == 'TEST_NOT_FOUND':
+            raise NoSuchCommentError('No such comment.')
