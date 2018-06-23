@@ -7,6 +7,7 @@ from functools import wraps
 from logging import getLogger
 
 from marucat_app.database_helper.fake_articles_connector import FakeArticlesConnector
+from marucat_app.database_helper.articles_mongodb import ArticlesConnector
 from marucat_app.utils.errors import DatabaseNotExistError
 
 logger = getLogger()
@@ -137,7 +138,7 @@ class ConnectorCreator(object):
         # self._articles = Articles(ArticlesConnector(connection))
 
         # TODO just pass now
-        self._articles = Articles(FakeArticlesConnector())
+        self._articles = Articles(ArticlesConnector())
 
     @property
     def articles_helper(self):
