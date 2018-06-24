@@ -11,6 +11,12 @@ class ArticlesConnector(object):
 
     Driven by MongoDB.
     """
+    def __init__(self, db):
+        """Initial mongodb connector
+
+        :param db: database instance
+        """
+        self._db = db
 
     @staticmethod
     def get_list(*, size, page, tags=None):

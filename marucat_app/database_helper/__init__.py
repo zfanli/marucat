@@ -5,10 +5,14 @@
 
 from functools import wraps
 from logging import getLogger
+from time import time
+
+from pymongo import MongoClient
 
 from marucat_app.database_helper.fake_articles_connector import FakeArticlesConnector
 from marucat_app.database_helper.articles_mongodb import ArticlesConnector
 from marucat_app.utils.errors import DatabaseNotExistError
+from marucat_app.utils.utils import get_initial_file, SCHEMA
 
 logger = getLogger()
 
@@ -137,8 +141,22 @@ class ConnectorCreator(object):
         # create connector use the connection of MongoDB
         # self._articles = Articles(ArticlesConnector(connection))
 
-        # TODO just pass now
-        self._articles = Articles(ArticlesConnector())
+        # get ini file
+        conf = get_initial_file()
+        # get url and port from configuration
+        url = conf['mongodb']['url']
+        port = int(conf['mongodb']['port'])
+        # initial mongodb connection
+        client = MongoClient(url, port)
+
+        # test connection
+        # leave a log show the connect time
+        db = client[SCHEMA]
+        connect_log = db.connect_log
+        connect_log.insert_one({'time': time()})
+
+        # initial mongodb connector
+        self._articles = Articles(ArticlesConnector(client[SCHEMA]))
 
     @property
     def articles_helper(self):

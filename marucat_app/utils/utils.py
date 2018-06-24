@@ -4,11 +4,17 @@
 """Utils"""
 
 import re
+from os import path
+from configparser import ConfigParser
 
 from marucat_app.utils.errors import NotANumberError
 
+# App name
 APP_NAME = 'marucat_app'
+# Connector factory key
 CONNECTOR_FACTORY = 'connector_factory'
+# default schema name
+SCHEMA = 'blog'
 
 
 def get_db_helper(app, name):
@@ -120,6 +126,29 @@ def is_contained(target, keys):
 
     # All seems to be going well
     return True
+
+
+def get_initial_file():
+    """Get initial file's content
+
+    :return: ini file instance
+    """
+
+    # edit path to config.ini base on current file path
+    # current file path: ~/marucat/marucat_app/utils/utils.py
+    # target file path: ~/marucat/config.ini
+    p = path.abspath(__file__)
+    p = path.dirname(p)
+    p = path.split(p)[0]
+    p = path.split(p)[0]
+    p = path.join(p, 'config.ini')
+
+    # init parser
+    config = ConfigParser()
+    # return ini instance
+    config.read(p)
+    config.sections()
+    return config
 
 
 if __name__ == '__main__':
