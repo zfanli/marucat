@@ -11,15 +11,14 @@ class ArticlesConnector(object):
 
     Driven by MongoDB.
     """
-    def __init__(self, db):
+    def __init__(self, collection):
         """Initial mongodb connector
 
-        :param db: database instance
+        :param collection: database instance
         """
-        self._db = db
+        self._collection = collection
 
-    @staticmethod
-    def get_list(*, size, page, tags=None):
+    def get_list(self, *, size, page, tags=None):
         """Fetch articles' list
 
         If 'size x page' is greater than actually counts of articles,
@@ -29,10 +28,18 @@ class ArticlesConnector(object):
         :param page: start position of list, start by 1
         :param tags: tags
         """
-        # TODO
 
-    @staticmethod
-    def get_content(article_id, *, comments_size):
+        # edit condition
+        condition = {}
+        if tags:
+            condition = {'tags': tags}
+
+        # return result
+        # skip previous result: size * (page - 1)
+        # limit return result by size
+        return self._collection.find(condition).skip(size * (page - 1)).limit(size)
+
+    def get_content(self, article_id, *, comments_size):
         """Fetch article content
 
         Every times fetch the content of article,
@@ -44,8 +51,7 @@ class ArticlesConnector(object):
         """
         # TODO
 
-    @staticmethod
-    def get_comments(article_id, *, size, page):
+    def get_comments(self, article_id, *, size, page):
         """get article content
 
         :param article_id: article ID
@@ -55,8 +61,7 @@ class ArticlesConnector(object):
         """
         # TODO
 
-    @staticmethod
-    def post_comment(article_id, *, data):
+    def post_comment(self, article_id, *, data):
         """Post new comment
 
         :param article_id: article ID
@@ -65,8 +70,7 @@ class ArticlesConnector(object):
         """
         # TODO
 
-    @staticmethod
-    def delete_comment(article_id, comment_id):
+    def delete_comment(self, article_id, comment_id):
         """Delete a comment
 
         :param article_id: article ID

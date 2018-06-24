@@ -156,7 +156,8 @@ class ConnectorCreator(object):
         connect_log.insert_one({'time': time()})
 
         # initial mongodb connector
-        self._articles = Articles(ArticlesConnector(client[SCHEMA]))
+        # Articles: SCHEMA/articles
+        self._articles = Articles(ArticlesConnector(client[SCHEMA].articles))
 
     @property
     def articles_helper(self):
