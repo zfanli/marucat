@@ -23,22 +23,22 @@ def test_get_list(client):
     def perform_get_list(input_val, expect_val, code=200, tags=None):
         """test template
 
-        :param input_val: inputted values (size, page)
-        :param expect_val: the expected result (size, page)
+        :param input_val: inputted values (size, offset)
+        :param expect_val: the expected result (size, offset)
         :param code: expected status code
         :param tags: tags
         """
-        # get inputted size and page
-        size, page = input_val if input_val else (None, None)
+        # get inputted size and offset
+        size, offset = input_val if input_val else (None, None)
 
         # make request with query params
-        # example: /articles/list?size=10&page=1
-        requested_url = '/articles/list{}'.format(
+        # example: /articles/list?size=10&offset=1
+        requested_url = '/articles{}'.format(
             '?{}{}{}'.format(
                 'size={}'.format(size) if size != '' else '',
-                '&' if size and page else '',
-                'page={}'.format(page) if page != '' else ''
-            ) if size or page else ''
+                '&' if size and offset else '',
+                'offset={}'.format(offset) if offset != '' else ''
+            ) if size or offset else ''
         )
 
         # perform request
@@ -50,15 +50,15 @@ def test_get_list(client):
         assert code == r.status_code
 
         if 200 == code:
-            # get expected size and page
-            e_size, e_page = expect_val
+            # get expected size and offset
+            e_size, e_offset = expect_val
             # check Content-Type
             assert 'application/json' == r.content_type
             # check data
             fake_data = {
                 'test_only': 'TESTING',
                 'size': e_size,
-                'page': e_page,
+                'offset': e_offset,
                 'tags': tags
             }
             assert fake_data == r.get_json()[1]
@@ -72,50 +72,35 @@ def test_get_list(client):
 
     # 200 below
 
-    # default values (size, page)
-    default_val = (10, 1)
+    # default values (size, offset)
+    default_val = (10, 0)
 
     # default params
-    # articles/list
     perform_get_list(None, default_val)
-
     # specific params
-    # articles/list?size=55&page=999
     perform_get_list((55, 999), (55, 999))
-
     # error checking
     # no val provided to size
-    # articles/list?size=&page=998
     perform_get_list(('', 998), (10, 998))
-
-    # no val provided to page
-    # articles/list?size=1098&page=
-    perform_get_list((1098, ''), (1098, 1))
-
+    # no val provided to offset
+    perform_get_list((1098, ''), (1098, 0))
     # no val provided to both
-    # articles/list?size=&page=
     perform_get_list(('', ''), default_val)
 
     # 400 below
 
     # invalid val provided
-    # articles/list?size=abc&page=192
     perform_get_list(('abc', 192), None, 400)
-    # articles/list?size=111&page=acb
     perform_get_list((111, 'acb'), None, 400)
-    # articles/list?size=-1&page=192
     perform_get_list((-1, 192), None, 400)
-    # articles/list?size=111&page=-99
     perform_get_list((111, -99), None, 400)
-    # articles/list?size=0&page=192
     perform_get_list((0, 192), None, 400)
-    # articles/list?size=111&page=0
     perform_get_list((111, 0), None, 400)
 
     # other errors
 
     # 405 method not allowed
-    rv = client.post('/articles/list?size=1&page=2')
+    rv = client.post('/articles?size=1&offset=2')
     assert 405 == rv.status_code
 
 

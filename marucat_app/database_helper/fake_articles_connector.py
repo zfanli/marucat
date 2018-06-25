@@ -19,14 +19,13 @@ class FakeArticlesConnector(object):
     """A fake API for testing"""
 
     @staticmethod
-    def get_list(*, size, page, tags=None):
+    def get_list(*, size, offset, tags=None):
         """Fetch articles' list
 
-        If 'size x page' is greater than actually counts of articles,
-        fetch the all rest of articles.
+        When size is equals to zero, it is mean fetch all of the articles.
 
         :param size: length of list
-        :param page: start position of list, start by 1
+        :param offset: counts of skips
         :param tags: tags
         """
 
@@ -37,7 +36,7 @@ class FakeArticlesConnector(object):
             {
                 'test_only': 'TESTING',
                 'size': size,
-                'page': page,
+                'offset': offset,
                 'tags': tags
             }
         ]

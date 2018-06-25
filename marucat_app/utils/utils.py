@@ -58,13 +58,25 @@ def convert_to_number(*arr):
 
 
 def is_positive_number(*arr):
-    """Check is the number a positive number.
+    """Check if the numbers are positive number.
 
     :param arr: number array
-    :return: True if it is a positive number, or False if not
+    :return: True if are positive number, or False if not
     """
     for n in arr:
         if n <= 0:
+            return False
+    return True
+
+
+def is_natural_number(*arr):
+    """Check if the numbers are natural number (includes zero).
+
+    :param arr: number array
+    :return: True if are natural number, or False if not
+    """
+    for n in arr:
+        if n < 0:
             return False
     return True
 

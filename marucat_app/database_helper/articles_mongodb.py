@@ -18,14 +18,13 @@ class ArticlesConnector(object):
         """
         self._collection = collection
 
-    def get_list(self, *, size, page, tags=None):
+    def get_list(self, *, size, offset, tags=None):
         """Fetch articles' list
 
-        If 'size x page' is greater than actually counts of articles,
-        fetch the all rest of articles.
+        When size is equals to zero, it is mean fetch all of the articles.
 
         :param size: length of list
-        :param page: start position of list, start by 1
+        :param offset: counts of skips
         :param tags: tags
         """
 
@@ -35,9 +34,7 @@ class ArticlesConnector(object):
             condition = {'tags': tags}
 
         # return result
-        # skip previous result: size * (page - 1)
-        # limit return result by size
-        return self._collection.find(condition).skip(size * (page - 1)).limit(size)
+        return self._collection.find(condition).skip(offset).limit(size)
 
     def get_content(self, article_id, *, comments_size):
         """Fetch article content

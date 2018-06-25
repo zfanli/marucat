@@ -53,14 +53,14 @@ class Articles(object):
         self._connector = articles_connector
 
     @log
-    def get_list(self, *, size, page, tags):
+    def get_list(self, *, size, offset, tags):
         """fetch articles list
 
         :param size: fetch size
-        :param page: fetch start position
+        :param offset: counts of skips
         :param tags: tags
         """
-        return self._connector.get_list(size=size, page=page, tags=tags)
+        return self._connector.get_list(size=size, offset=offset, tags=tags)
 
     @log
     def get_content(self, article_id, *, comments_size):

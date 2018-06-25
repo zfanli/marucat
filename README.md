@@ -52,30 +52,32 @@ Blog 前后端分离（🌟）。
 #### 获取文章列表
 
 ```
-GET /articles/list
+GET /articles
 
 Query parameters
     size: number, fetch size, 10 by default
-    page: number, fetch start position, 1 by default
+    offset: number, counts of skips, 0 by default
     tags: string or strings array, tags 
 
 Example:
-    GET /articles/list?size=10&page=1
+    GET /articles?size=10&offset=0
 ```
 
 可以不给查询参数。
 
 ```
-GET /articles/list
+GET /articles
 ```
 
 不给查询参数将等价于下面的请求。
 
 ```
-GET /articles/list?size=10&page=1
+GET /articles?size=10&offset=0
 ```
 
-`size/page` 一般使用默认值。默认值由全局设定中取得，通常为 `10/1`。
+`size` 一般使用默认值。默认值由全局设定中取得，通常为 `10`。
+
+`offset` 默认为 `0`，分页时需要设定。
 
 `tags` 参数可以是一个字符串或者一个字符串数组，默认为空，即获取所有。
 
@@ -84,14 +86,14 @@ GET /articles/list?size=10&page=1
 * ✔️ 200 OK
     * 正常
 * ✖️ 400 BAD REQUEST
-    * size/page 非数值
-    * size/page 小于等于0
+    * size/offset 非数值
+    * size/offset 小于等于0
 * ✖️ 404 NOT FOUND
     * 无内容（指定 tags 下）
 
 ##### 数据结构
 
-```python
+```javascript
 [
     {
         # Article ID
@@ -140,7 +142,7 @@ Example:
 
 ##### 数据结构
 
-```python
+```javascript
 {
     # Article ID
     'aid': 'a12345',
@@ -204,7 +206,7 @@ Example:
 
 ##### 数据结构
 
-```python
+```javascript
 [
     {
         # Article ID
@@ -365,7 +367,7 @@ PUT /settings/<items>
 
 #### Articles & Comments
 
-```python
+```javascript
 {
     # Article ID
     'aid': 'a12345',
@@ -406,7 +408,7 @@ PUT /settings/<items>
 
 #### Columns
 
-```python
+```javascript
 {
     'column_id': 'cl1234',
     'Column_name': 'Customize name',

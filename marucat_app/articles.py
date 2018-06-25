@@ -17,7 +17,8 @@ from marucat_app.utils.utils_wrapper import (
     convert_and_check_positive_number,
     no_such_article, not_a_number, no_such_comment,
     not_a_positive_number, invalid_post_data,
-    articles_list_not_found
+    articles_list_not_found,
+    convert_and_check_natural_number
 )
 
 # handling the url start with '/articles'
@@ -27,13 +28,13 @@ bp = Blueprint('articles', __name__, url_prefix='/articles')
 ARTICLES_HELPER = 'articles_helper'
 
 
-@bp.route('/list', methods=['GET'])
+@bp.route('/', methods=['GET'])
 def articles_list_fetch():
     """Fetch articles list
 
     Query parameters
         - size: number, fetch size, 10 by default
-        - page: number, fetch start position, 1 by default
+        - offset: number, fetch start position, 0 by default
         - tags: string or strings array, tags
 
     :return
@@ -44,18 +45,18 @@ def articles_list_fetch():
 
     # get request parameters
     size = request.args.get('size', 10)
-    page = request.args.get('page', 1)
+    offset = request.args.get('offset', 0)
 
     # try to convert parameters to number and do some check
     try:
-        size, page = convert_and_check_positive_number(size, page)
+        size, offset = convert_and_check_natural_number(size, offset)
     except NotANumberError:
         # not a number
-        error = not_a_number('size/page')
+        error = not_a_number('size/offset')
         return jsonify(error), 400
     except ValueError:
         # not a positive number
-        error = not_a_positive_number('size/page')
+        error = not_a_positive_number('size/offset')
         return jsonify(error), 400
 
     # get tags from request
@@ -68,7 +69,7 @@ def articles_list_fetch():
     articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch list
-    a_list = articles_helper.get_list(size=size, page=page, tags=tags)
+    a_list = articles_helper.get_list(size=size, offset=offset, tags=tags)
 
     # 404 not found
     if a_list is None:
