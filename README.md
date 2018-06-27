@@ -1,6 +1,6 @@
 <h1 align="center">MaruCat</h1>
 
-<div align="center"> Maru is my cat's name. He is Dragon Li.</div>
+<div align="center"> Maru is my cat. He is Dragon Li.</div>
 
 <br>
 
