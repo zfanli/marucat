@@ -101,7 +101,7 @@ GET /articles?size=10&offset=0
 [
     {
         # Article ID
-        'aid': 'a12345',
+        '_id': '5b33af56d2cbe686e00b75c9',
         # Author
         'author': 'AUTHOR',
         # Peek or abstract
@@ -149,7 +149,7 @@ Example:
 ```javascript
 {
     # Article ID
-    'aid': 'a12345',
+    '_id': '5b33af56d2cbe686e00b75c9',
     # Author
     'author': 'AUTHOR',
     # Peek or abstract
@@ -214,7 +214,7 @@ Example:
 [
     {
         # Article ID
-        'aid': 'a12345',
+        'aid': '5b33af56d2cbe686e00b75c9',
         # Comment ID
         'cid': 'c12345',
         # Who wrote the comment
@@ -374,7 +374,7 @@ PUT /settings/<items>
 ```javascript
 {
     # Article ID
-    'aid': 'a12345',
+    '_id': '5b33af56d2cbe686e00b75c9',
     # Author
     'author': 'AUTHOR',
     # Peek or abstract
@@ -389,7 +389,7 @@ PUT /settings/<items>
     'comments': [
         {
             # Article ID
-            'aid': 'a12345',
+            'aid': '5b33af56d2cbe686e00b75c9',
             # Comment ID
             'cid': 'c12345',
             # Who wrote the comment

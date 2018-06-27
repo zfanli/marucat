@@ -4,6 +4,7 @@
 """Utils"""
 
 import re
+import time
 from os import path
 from configparser import ConfigParser
 
@@ -171,35 +172,46 @@ def deal_with_object_id(target):
     :param target: target list or dict
     :return: result without ObjectId
     """
-    if type(target) != list:
-        target = [target]
 
-    def convert_object_id(dic):
+    def convert_object_id(tar):
         """Convert ObjectId
 
         Check if it contains ObjectId and convert ObjectId to str if it does
 
-        :param dic: target
+        :param tar: target
         :return: converted result
         """
 
-        # check all keys in dic
-        for k in dic:
+        # check all keys in tar
+        for k in tar:
             # if the attribute is ObjectId convert it to str
-            if type(dic[k]) == ObjectId:
-                dic[k] = str(dic[k])
+            if type(tar[k]) == ObjectId:
+                tar[k] = str(tar[k])
             # if the attribute is a list, travel the dict and check all attributes
-            elif type(dic[k]) == list:
-                convert_object_id(dic[k])
+            elif type(tar[k]) == list:
+                tar[k] = deal_with_object_id(tar[k])
 
-        return dic
+        return tar
 
-    result = []
+    if type(target) == dict:
+        return convert_object_id(target)
+    elif type(target) == list:
+        result = []
 
-    for n in target:
-        result.append(convert_object_id(n))
+        for n in target:
+            result.append(convert_object_id(n))
 
-    return result if len(result) > 1 else result[0]
+        return result
+
+
+def get_current_time_in_milliseconds():
+    """Get current time in milliseconds.
+
+    Because JavaScript accepts a milliseconds timestamp.
+
+    :return: current time in milliseconds
+    """
+    return time.time() * 1000
 
 
 if __name__ == '__main__':

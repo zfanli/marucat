@@ -33,10 +33,32 @@ class ArticlesConnector(object):
         condition = {}
         if tags:
             condition = {'tags': tags}
+
+        # fetch format
+        projection = {
+            '_id': 1,
+            'author': 1,
+            'peek': 1,
+            'views': 1,
+            'comments': 1,
+            'tags': 1,
+            'timestamp': 1
+        }
+
         # fetch list
-        cur = self._collection.find(condition).skip(offset).limit(size)
+        cur = self._collection.find(condition, projection).skip(offset).limit(size)
+
+        # check if nothing was fetched
+        if cur.count() == 0:
+            return None
+
         # convert to list
         result = [i for i in cur]
+        # set counts of comments
+        for i in result:
+            i['reviews'] = len(i['comments'])
+            del i['comments']
+        # convert ObjectId to str and return
         return deal_with_object_id(result)
 
     def get_content(self, article_id, *, comments_size):
