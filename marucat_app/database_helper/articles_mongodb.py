@@ -4,6 +4,7 @@
 """Articles connector, driven by MongoDB."""
 
 # from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
+from marucat_app.utils.utils import deal_with_object_id
 
 
 class ArticlesConnector(object):
@@ -32,9 +33,11 @@ class ArticlesConnector(object):
         condition = {}
         if tags:
             condition = {'tags': tags}
-
-        # return result
-        return self._collection.find(condition).skip(offset).limit(size)
+        # fetch list
+        cur = self._collection.find(condition).skip(offset).limit(size)
+        # convert to list
+        result = [i for i in cur]
+        return deal_with_object_id(result)
 
     def get_content(self, article_id, *, comments_size):
         """Fetch article content

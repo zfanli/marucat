@@ -7,14 +7,14 @@ import re
 from os import path
 from configparser import ConfigParser
 
+from bson import ObjectId
+
 from marucat_app.utils.errors import NotANumberError
 
 # App name
 APP_NAME = 'marucat_app'
 # Connector factory key
 CONNECTOR_FACTORY = 'connector_factory'
-# default schema name
-SCHEMA = 'blog'
 
 
 def get_db_helper(app, name):
@@ -161,6 +161,45 @@ def get_initial_file():
     config.read(p)
     config.sections()
     return config
+
+
+def deal_with_object_id(target):
+    """Deal with ObjectId in MongoDB documents.
+
+    Convert ObjectId to str.
+
+    :param target: target list or dict
+    :return: result without ObjectId
+    """
+    if type(target) != list:
+        target = [target]
+
+    def convert_object_id(dic):
+        """Convert ObjectId
+
+        Check if it contains ObjectId and convert ObjectId to str if it does
+
+        :param dic: target
+        :return: converted result
+        """
+
+        # check all keys in dic
+        for k in dic:
+            # if the attribute is ObjectId convert it to str
+            if type(dic[k]) == ObjectId:
+                dic[k] = str(dic[k])
+            # if the attribute is a list, travel the dict and check all attributes
+            elif type(dic[k]) == list:
+                convert_object_id(dic[k])
+
+        return dic
+
+    result = []
+
+    for n in target:
+        result.append(convert_object_id(n))
+
+    return result if len(result) > 1 else result[0]
 
 
 if __name__ == '__main__':

@@ -5,21 +5,9 @@
 
 from flask import Blueprint, current_app, jsonify, request
 
-from marucat_app.utils.errors import (
-    NoSuchArticleError, NotANumberError,
-    NoSuchCommentError
-)
-from marucat_app.utils.utils import (
-    get_db_helper, has_special_characters,
-    convert_string_to_list, is_contained
-)
-from marucat_app.utils.utils_wrapper import (
-    convert_and_check_positive_number,
-    no_such_article, not_a_number, no_such_comment,
-    not_a_positive_number, invalid_post_data,
-    articles_list_not_found,
-    convert_and_check_natural_number
-)
+from marucat_app.utils import errors
+from marucat_app.utils import utils
+from marucat_app.utils import utils_wrapper
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -49,31 +37,31 @@ def articles_list_fetch():
 
     # try to convert parameters to number and do some check
     try:
-        size, offset = convert_and_check_natural_number(size, offset)
-    except NotANumberError:
+        size, offset = utils_wrapper.convert_and_check_natural_number(size, offset)
+    except errors.NotANumberError:
         # not a number
-        error = not_a_number('size/offset')
+        error = utils_wrapper.not_a_number('size/offset')
         return jsonify(error), 400
     except ValueError:
         # not a positive number
-        error = not_a_positive_number('size/offset')
+        error = utils_wrapper.not_a_positive_number('size/offset')
         return jsonify(error), 400
 
     # get tags from request
     tags = request.args.get('tags')
     # convert tags to list if it is not a None
     if tags is not None:
-        tags = convert_string_to_list(tags)
+        tags = utils.convert_string_to_list(tags)
 
     # get articles helper
-    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+    articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch list
     a_list = articles_helper.get_list(size=size, offset=offset, tags=tags)
 
     # 404 not found
     if a_list is None:
-        error = articles_list_not_found(tags)
+        error = utils_wrapper.articles_list_not_found(tags)
         return jsonify(error), 404
 
     # 200
@@ -98,30 +86,30 @@ def article_content(article_id):
     comments_size = request.args.get('comments_size', 10)
     # convert and check
     try:
-        comments_size = convert_and_check_positive_number(comments_size)
-    except NotANumberError:
+        comments_size = utils_wrapper.convert_and_check_positive_number(comments_size)
+    except errors.NotANumberError:
         # not a number
-        error = not_a_number('comments_size')
+        error = utils_wrapper.not_a_number('comments_size')
         return jsonify(error), 400
     except ValueError:
         # not a positive number
-        error = not_a_positive_number('comments_size')
+        error = utils_wrapper.not_a_positive_number('comments_size')
         return jsonify(error), 400
 
     # check if the article ID contains special characters
-    if has_special_characters(article_id):
+    if utils.has_special_characters(article_id):
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
-    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+    articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch content
     try:
         content = articles_helper.get_content(article_id, comments_size=comments_size)
-    except NoSuchArticleError:
+    except errors.NoSuchArticleError:
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
     # 200
@@ -144,9 +132,9 @@ def article_comments_fetch(article_id):
     """
 
     # check is the provided article id contains a special characters or not
-    if has_special_characters(article_id):
+    if utils.has_special_characters(article_id):
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
     size = request.args.get('size', 10)
@@ -154,26 +142,26 @@ def article_comments_fetch(article_id):
 
     # convert to number and checking
     try:
-        size, page = convert_and_check_positive_number(size, page)
-    except NotANumberError:
+        size, page = utils_wrapper.convert_and_check_positive_number(size, page)
+    except errors.NotANumberError:
         # not a number
-        error = not_a_number('size/page')
+        error = utils_wrapper.not_a_number('size/page')
         return jsonify(error), 400
     except ValueError:
         # values <= 0
-        error = not_a_positive_number('size/page')
+        error = utils_wrapper.not_a_positive_number('size/page')
         return jsonify(error), 400
 
-    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+    articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 
     # fetch comments
     try:
         comments = articles_helper.get_comments(
             article_id, size=size, page=page
         )
-    except NoSuchArticleError:
+    except errors.NoSuchArticleError:
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
     # 200
@@ -196,26 +184,26 @@ def article_comments_save(article_id):
     """
 
     # check if the article ID contains special characters
-    if has_special_characters(article_id):
+    if utils.has_special_characters(article_id):
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
     # get post data
     data = request.get_json()
     # check attributes
     keys = ['from', 'body', 'timestamp']
-    if not is_contained(data, keys):
-        error = invalid_post_data(keys)
+    if not utils.is_contained(data, keys):
+        error = utils_wrapper.invalid_post_data(keys)
         return jsonify(error), 400
 
     # get articles helper
-    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+    articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 
     try:
         articles_helper.post_comment(article_id, data=data)
-    except NoSuchArticleError:
-        error = no_such_article()
+    except errors.NoSuchArticleError:
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
     return '', 201
@@ -229,28 +217,28 @@ def article_comments_delete(article_id, comment_id):
     :param comment_id: comment ID
     """
     # check if the article ID contains special characters
-    if has_special_characters(article_id):
+    if utils.has_special_characters(article_id):
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
     # check if the comment ID contains special characters
-    if has_special_characters(comment_id):
+    if utils.has_special_characters(comment_id):
         # 404
-        error = no_such_comment()
+        error = utils_wrapper.no_such_comment()
         return jsonify(error), 404
 
     # get articles helper
-    articles_helper = get_db_helper(current_app, ARTICLES_HELPER)
+    articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 
     try:
         articles_helper.delete_comment(article_id, comment_id)
-    except NoSuchArticleError:
+    except errors.NoSuchArticleError:
         # 404
-        error = no_such_article()
+        error = utils_wrapper.no_such_article()
         return jsonify(error), 404
-    except NoSuchCommentError:
+    except errors.NoSuchCommentError:
         # 404
-        error = no_such_comment()
+        error = utils_wrapper.no_such_comment()
         return jsonify(error), 404
 
     # everything are going well

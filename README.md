@@ -25,6 +25,10 @@ API 内容：
 
 MaruCat 依赖 MongoDB 作为持久化层。所有数据在 MongoDB 中持久化。
 
+**🍃PyMongo**
+
+MaruCat 使用 PyMongo 在 Python 中驱动 MongoDB。这个库是必须的。
+
 **🌶️Flask**
 
 MaruCat 使用 Flask 微服务框架提供 REST 风格 API 服务。
