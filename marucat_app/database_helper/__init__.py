@@ -148,6 +148,8 @@ class ConnectorCreator(object):
         url = mongo_conf['url']
         port = int(mongo_conf['port'])
         schema = mongo_conf['schema']
+        if test_flag:
+            schema = mongo_conf['test_schema']
         articles_collection = mongo_conf['articles_collection']
         # initial mongodb connection
         client = MongoClient(url, port)

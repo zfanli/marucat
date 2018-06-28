@@ -15,7 +15,7 @@ from marucat_app.utils.utils import (
 
 
 # create flask application
-def create_app(*, level=ERROR, db='mongodb'):
+def create_app(*, level=ERROR, db='mongodb', test=False):
 
     # logging configuration
     basicConfig(
@@ -25,7 +25,7 @@ def create_app(*, level=ERROR, db='mongodb'):
 
     app = Flask(APP_NAME)
 
-    app.config[CONNECTOR_FACTORY] = ConnectorCreator(db)
+    app.config[CONNECTOR_FACTORY] = ConnectorCreator(db, test=test)
     app.url_map.strict_slashes = False
 
     @app.route('/')
