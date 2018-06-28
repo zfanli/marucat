@@ -5,6 +5,7 @@
 
 # from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
 from marucat_app.utils.utils import deal_with_object_id
+from bson import ObjectId
 
 
 class ArticlesConnector(object):
@@ -30,9 +31,9 @@ class ArticlesConnector(object):
         """
 
         # edit condition
-        condition = {}
+        condition = {'deleted': False}
         if tags:
-            condition = {'tags': tags}
+            condition['tags'] = tags
 
         # fetch format
         projection = {
@@ -72,6 +73,12 @@ class ArticlesConnector(object):
         :raise: 404 NoSuchArticleError
         """
         # TODO
+
+        condition = {'_id': ObjectId(article_id)}
+
+        data = self._collection.find_one(condition)
+
+        return deal_with_object_id(data)
 
     def get_comments(self, article_id, *, size, page):
         """get article content

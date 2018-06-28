@@ -22,7 +22,7 @@ def get_articles_collection():
     return db[articles_collection]
 
 
-def make_data(aid, peek, content, views, tags, cid, comment, timestamp):
+def make_data(aid, peek, content, views, tags, comment, timestamp):
 
     return {
         # Author
@@ -36,23 +36,7 @@ def make_data(aid, peek, content, views, tags, cid, comment, timestamp):
         # Tags
         'tags': tags,
         # Comments
-        'comments': [
-            {
-                # Article ID
-                'aid': aid,
-                # Comment ID
-                'cid': cid,
-                # Who wrote the comment
-                'from': 'Mary',
-                # Comment body
-                'body': comment,
-                # Created or updated timestamp
-                'timestamp': timestamp,
-                # Deleted flag
-                'deleted': False
-            },
-            # ...
-        ],
+        'comments': comment,
         # Created or updated timestamp
         'timestamp': timestamp,
         # Deleted flag
@@ -60,9 +44,30 @@ def make_data(aid, peek, content, views, tags, cid, comment, timestamp):
     }
 
 
+def make_comment(aid, cid, body, timestamp, deleted):
+
+    return {
+        # Article ID
+        'aid': aid,
+        # Comment ID
+        'cid': cid,
+        # Who wrote the comment
+        'from': 'Mary',
+        # Comment body
+        'body': body,
+        # Created or updated timestamp
+        'timestamp': timestamp,
+        # Deleted flag
+        'deleted': deleted
+    }
+
+
 if __name__ == '__main__':
     articles = get_articles_collection()
+    comments = list(map(lambda x: make_comment(
+        '1234', x, 'Just comment for {}'.format(x),
+        get_current_time_in_milliseconds(), False if x != 3 else True), range(4)))
     data = make_data('as123456', 'Just a peek at there.', 'Nothing here',
-                     998, 'OK', 'c123455', 'No comment', get_current_time_in_milliseconds())
+                     998, 'OK', comments, get_current_time_in_milliseconds())
     articles.delete_many({})
     articles.insert_one(data)
