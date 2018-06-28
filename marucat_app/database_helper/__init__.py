@@ -5,14 +5,13 @@
 
 from functools import wraps
 from logging import getLogger
-from time import time
 
 from pymongo import MongoClient
 
 from marucat_app.database_helper.fake_articles_connector import FakeArticlesConnector
 from marucat_app.database_helper.articles_mongodb import ArticlesConnector
 from marucat_app.utils.errors import DatabaseNotExistError
-from marucat_app.utils.utils import get_initial_file
+from marucat_app.utils.utils import get_initial_file, get_current_time_in_milliseconds
 
 logger = getLogger()
 
@@ -117,7 +116,7 @@ class ConnectorCreator(object):
     Use to instance a database helper.
     """
 
-    def __init__(self, db):
+    def __init__(self, db, *, test=False):
         """Initial database connection
 
         :param db: specified database
@@ -127,14 +126,14 @@ class ConnectorCreator(object):
             self._articles = Articles(FakeArticlesConnector())
         elif db == 'mongodb':
             # load MongoDB helper
-            self.init_mongodb()
+            self.init_mongodb(test)
         else:
             # Specific db is not supported
             raise DatabaseNotExistError(
                 'Specific Database do not exist: {}'.format(db)
             )
 
-    def init_mongodb(self):
+    def init_mongodb(self, test_flag):
         """Init MongoDB helper"""
         # get connection of MondoDB
         # connection = None
@@ -158,7 +157,7 @@ class ConnectorCreator(object):
         # leave a log show the connect time
         db = client[schema]
         connect_log = db.connect_log
-        connect_log.insert_one({'time': time()})
+        connect_log.insert_one({'time': get_current_time_in_milliseconds()})
 
         # initial mongodb connector
         # Articles: SCHEMA/articles

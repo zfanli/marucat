@@ -22,7 +22,7 @@ def get_articles_collection():
     return db[articles_collection]
 
 
-def make_data(aid, peek, content, views, tags, cid, comment, time):
+def make_data(aid, peek, content, views, tags, cid, comment, timestamp):
 
     return {
         # Author
@@ -47,14 +47,14 @@ def make_data(aid, peek, content, views, tags, cid, comment, time):
                 # Comment body
                 'body': comment,
                 # Created or updated timestamp
-                'timestamp': time,
+                'timestamp': timestamp,
                 # Deleted flag
                 'deleted': False
             },
             # ...
         ],
         # Created or updated timestamp
-        'timestamp': time,
+        'timestamp': timestamp,
         # Deleted flag
         'deleted': False
     }
@@ -64,4 +64,5 @@ if __name__ == '__main__':
     articles = get_articles_collection()
     data = make_data('as123456', 'Just a peek at there.', 'Nothing here',
                      998, 'OK', 'c123455', 'No comment', get_current_time_in_milliseconds())
+    articles.delete_many({})
     articles.insert_one(data)

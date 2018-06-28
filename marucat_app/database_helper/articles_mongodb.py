@@ -54,7 +54,7 @@ class ArticlesConnector(object):
 
         # convert to list
         result = [i for i in cur]
-        # set counts of comments
+        # set counts of comments and remove the array
         for i in result:
             i['reviews'] = len(i['comments'])
             del i['comments']
