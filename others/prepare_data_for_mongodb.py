@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 """Prepare some data for development or testing."""
-import time
 
 from pymongo import MongoClient
 
@@ -22,7 +21,7 @@ def get_articles_collection():
     return db[articles_collection]
 
 
-def make_data(aid, peek, content, views, tags, comment, timestamp):
+def make_data(peek, content, views, tags, comment, timestamp):
 
     return {
         # Author
@@ -66,8 +65,8 @@ if __name__ == '__main__':
     articles = get_articles_collection()
     comments = list(map(lambda x: make_comment(
         '1234', x, 'Just comment for {}'.format(x),
-        get_current_time_in_milliseconds(), False if x != 3 else True), range(4)))
-    data = make_data('as123456', 'Just a peek at there.', 'Nothing here',
+        get_current_time_in_milliseconds(), False if x % 3 != 1 else True), range(8)))
+    data = make_data('Just a peek at there.', 'Nothing here',
                      998, 'OK', comments, get_current_time_in_milliseconds())
     articles.delete_many({})
     articles.insert_one(data)
