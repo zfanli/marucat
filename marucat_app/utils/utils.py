@@ -9,6 +9,7 @@ from os import path
 from configparser import ConfigParser
 
 from bson import ObjectId
+from flask import make_response
 
 from marucat_app.utils.errors import NotANumberError
 
@@ -182,7 +183,14 @@ def deal_with_object_id(target):
         :return: converted result
         """
 
-        # check all keys in tar
+        # check tar's type
+        t = type(tar)
+        if t == ObjectId:
+            return str(t)
+        elif t != dict:
+            return tar
+
+        # check all keys in tar (when the tar is a dict)
         for k in tar:
             # if the attribute is ObjectId convert it to str
             if type(tar[k]) == ObjectId:
@@ -212,6 +220,17 @@ def get_current_time_in_milliseconds():
     :return: current time in milliseconds
     """
     return time.time() * 1000
+
+
+def create_response(headers, data):
+    """Create a response use given headers and data.
+
+    :param headers: dict, setting headers
+    :param data: pass to jsonify method
+    :return: response
+    """
+
+    response = make_response()
 
 
 if __name__ == '__main__':

@@ -67,6 +67,6 @@ if __name__ == '__main__':
         '1234', x, 'Just comment for {}'.format(x),
         get_current_time_in_milliseconds(), False if x % 3 != 1 else True), range(8)))
     data = make_data('Just a peek at there.', 'Nothing here',
-                     998, 'OK', comments, get_current_time_in_milliseconds())
+                     998, ['OK', 'red', 'blue'], comments, get_current_time_in_milliseconds())
     articles.delete_many({})
     articles.insert_one(data)
