@@ -109,3 +109,10 @@ class ArticlesConnector(object):
             - 404 NoSuchCommentError
         """
         # TODO
+
+    def get_articles_count(self):
+        """Get articles count
+
+        :return: counts of articles
+        """
+        return self._collection.find({'deleted': False}).count()

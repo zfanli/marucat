@@ -109,6 +109,14 @@ class Articles(object):
         """
         self._connector.delete_comment(article_id, comment_id)
 
+    @log
+    def get_articles_count(self):
+        """Get articles counts
+
+        :return: int, counts of articles
+        """
+        return self._connector.get_articles_count()
+
 
 class ConnectorCreator(object):
     """Create connector
