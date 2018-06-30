@@ -64,8 +64,14 @@ def articles_list_fetch():
         error = utils_wrapper.articles_list_not_found(tags)
         return jsonify(error), 404
 
+    # get all counts of articles
+    all_counts = articles_helper.get_articles_count()
+    headers = {'next-page': True}
+    if (all_counts - size - offset) <= 0:
+        headers['next-page'] = False
+
     # 200
-    return jsonify(a_list), 200
+    return utils.create_response(headers, a_list, 200)
 
 
 @bp.route('/aid<article_id>', methods=['GET'])

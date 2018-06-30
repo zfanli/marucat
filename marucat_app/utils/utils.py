@@ -7,6 +7,7 @@ import re
 import time
 from os import path
 from configparser import ConfigParser
+from json import dumps
 
 from bson import ObjectId
 from flask import make_response
@@ -222,15 +223,22 @@ def get_current_time_in_milliseconds():
     return time.time() * 1000
 
 
-def create_response(headers, data):
+def create_response(headers, data, code):
     """Create a response use given headers and data.
 
     :param headers: dict, setting headers
     :param data: pass to jsonify method
+    :param code: int, status code
     :return: response
     """
+    if not headers:
+        headers = {}
+    if not isinstance(headers, dict):
+        raise ValueError('Headers should be a dict.')
 
-    response = make_response()
+    headers['Content-Type'] = 'application/json'
+
+    return make_response(dumps(data), code, headers)
 
 
 if __name__ == '__main__':
