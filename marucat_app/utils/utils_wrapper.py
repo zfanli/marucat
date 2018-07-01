@@ -41,6 +41,22 @@ def not_a_positive_number(name):
     )
 
 
+def not_a_natural_number(name):
+    """Create a error message describe the variable is not a natural number.
+
+    Message
+        Invalid query parameters. {Variable name} must be a natural number.
+
+    :param name: variable name
+    :return: error message dict
+    """
+    return create_error_message(
+        'Invalid query parameters. {} must be a natural number.'.format(
+            name
+        )
+    )
+
+
 def no_such_article():
     """Create a error message describe the article does not exist.
 
@@ -79,7 +95,7 @@ def invalid_post_data(keys):
     )
 
 
-def articles_list_not_found(tags):
+def articles_list_not_found(tags, offset):
     """Create a error message describe the articles list is None.
 
     Message
@@ -87,10 +103,12 @@ def articles_list_not_found(tags):
         - Can not found any articles tagged by {tags}. (if tags is not None)
 
     :param tags: tags
+    :param offset: offset
     :return: error message dict
     """
-    message = 'Can not found any articles{}.'.format(
-        ' tagged by {}'.format(tags) if tags is not None else ''
+    message = 'Can not found any articles{}, offset {}.'.format(
+        ' tagged by {}'.format(tags) if tags is not None else '',
+        offset
     )
     return create_error_message(message)
 

@@ -44,7 +44,7 @@ def articles_list_fetch():
         return jsonify(error), 400
     except ValueError:
         # not a positive number
-        error = utils_wrapper.not_a_positive_number('size/offset')
+        error = utils_wrapper.not_a_natural_number('size/offset')
         return jsonify(error), 400
 
     # get tags from request
@@ -60,8 +60,8 @@ def articles_list_fetch():
     a_list = articles_helper.get_list(size=size, offset=offset, tags=tags)
 
     # 404 not found
-    if a_list is None:
-        error = utils_wrapper.articles_list_not_found(tags)
+    if a_list is None or len(a_list) == 0:
+        error = utils_wrapper.articles_list_not_found(tags, offset)
         return jsonify(error), 404
 
     # get all counts of articles
@@ -70,8 +70,11 @@ def articles_list_fetch():
     if (all_counts - size - offset) <= 0:
         headers['next-page'] = False
 
+    # pretty print if required or in debug mode
+    pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
+
     # 200
-    return utils.create_response(headers, a_list, 200)
+    return utils.create_response(headers, a_list, 200, pretty_flag)
 
 
 @bp.route('/aid<article_id>', methods=['GET'])
@@ -92,14 +95,14 @@ def article_content(article_id):
     comments_size = request.args.get('comments_size', 10)
     # convert and check
     try:
-        comments_size = utils_wrapper.convert_and_check_positive_number(comments_size)
+        comments_size = utils_wrapper.convert_and_check_natural_number(comments_size)
     except errors.NotANumberError:
         # not a number
         error = utils_wrapper.not_a_number('comments_size')
         return jsonify(error), 400
     except ValueError:
-        # not a positive number
-        error = utils_wrapper.not_a_positive_number('comments_size')
+        # not a natural number
+        error = utils_wrapper.not_a_natural_number('comments_size')
         return jsonify(error), 400
 
     # check if the article ID contains special characters

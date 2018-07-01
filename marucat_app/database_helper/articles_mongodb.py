@@ -28,6 +28,7 @@ class ArticlesConnector(object):
         :param size: length of list
         :param offset: counts of skips
         :param tags: tags
+        :return: fetched list, or None if nothing was fetched
         """
 
         # edit condition
@@ -49,12 +50,13 @@ class ArticlesConnector(object):
         # fetch list
         cur = self._collection.find(condition, projection).skip(offset).limit(size)
 
-        # check if nothing was fetched
-        if cur.count() == 0:
-            return None
-
         # convert to list
         result = [i for i in cur]
+
+        # check if nothing was fetched
+        if len(result) == 0:
+            return None
+
         # set counts of comments and remove the array
         for i in result:
             i['reviews'] = len(i['comments'])

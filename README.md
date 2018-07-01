@@ -85,6 +85,8 @@ GET /articles?size=10&offset=0
 
 `tags` 参数可以是一个字符串或者一个字符串数组，默认为空，即获取所有。
 
+响应头中存放一个 `next-page` key，表示是否存在下一页，为 False 时表示没有下一页。
+
 ##### 状态码
 
 * ✔️ 200 OK
@@ -95,27 +97,31 @@ GET /articles?size=10&offset=0
 * ✖️ 404 NOT FOUND
     * 无内容（指定 tags 下）
 
-##### 数据结构
+##### 请求示例
 
-```javascript
+```
+$ curl http://127.0.0.1:5000/articles?tags=OK -i
+HTTP/1.0 200 OK
+next-page: False
+Content-Type: application/json
+Content-Length: 242
+Server: Werkzeug/0.14.1 Python/3.6.4
+Date: Sun, 01 Jul 2018 15:00:38 GMT
+
 [
-    {
-        # Article ID
-        '_id': '5b33af56d2cbe686e00b75c9',
-        # Author
-        'author': 'AUTHOR',
-        # Peek or abstract
-        'peek': 'A peek of content.',
-        # Counts of views
-        'views': 999,
-        # Counts of comments
-        'reviews': 12,
-        # Tags
-        'tags': ['TAG', 'A', 'B'],
-        # Created or updated timestamp
-        'timestamp': 1529248869.717813
-    },
-    # ...
+  {
+    "_id": "5b3653aed2cbe68c10b0d9df",
+    "author": "Richard",
+    "peek": "Just a peek at there.",
+    "reviews": 8,
+    "tags": [
+      "OK",
+      "red",
+      "blue"
+    ],
+    "timestamp": 1530287022474.043,
+    "views": 998
+  }
 ]
 ```
 

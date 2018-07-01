@@ -223,7 +223,7 @@ def get_current_time_in_milliseconds():
     return time.time() * 1000
 
 
-def create_response(headers, data, code):
+def create_response(headers, data, code, pretty_flag):
     """Create a response use given headers and data.
 
     :param headers: dict, setting headers
@@ -238,7 +238,12 @@ def create_response(headers, data, code):
 
     headers['Content-Type'] = 'application/json'
 
-    return make_response(dumps(data), code, headers)
+    if pretty_flag:
+        data = dumps(data, sort_keys=True, indent=2)
+    else:
+        data = dumps(data)
+
+    return make_response(data, code, headers)
 
 
 if __name__ == '__main__':
