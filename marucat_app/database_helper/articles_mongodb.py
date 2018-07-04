@@ -108,7 +108,7 @@ class ArticlesConnector(object):
         """
         # TODO
 
-    def get_articles_count(self):
+    def get_articles_counts(self):
         """Get articles count
 
         :return: counts of articles

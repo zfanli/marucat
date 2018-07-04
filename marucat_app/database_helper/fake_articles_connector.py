@@ -106,3 +106,11 @@ class FakeArticlesConnector(object):
             raise NoSuchArticleError('No such article.')
         if comment_id == 'TEST_NOT_FOUND':
             raise NoSuchCommentError('No such comment.')
+
+    @staticmethod
+    def get_articles_counts():
+        """Get articles count
+
+        :return: counts of articles
+        """
+        return 100
