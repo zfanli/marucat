@@ -136,7 +136,8 @@ def convert_and_check_natural_number(*arr):
     and check if they are natural number (includes zero).
 
     :param arr: target list
-    :return: result of convert
+    :return: a list contains all of results,
+            note if only one result is expected, use `[var]` to receive it
     """
 
     c = convert_to_number(*arr)

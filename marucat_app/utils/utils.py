@@ -43,14 +43,15 @@ def convert_to_number(*arr):
     """Convert all elements of the arr to number
 
     :param arr: array of elements which will be converted to number
-    :return: the result of conversion
+    :return: a list contains all the result,
+            note if only one result is expected, use `[var]` to receives it
 
     Raise a NotANumber error when a element cannot convert to number.
     """
     r = []
     try:
-        for i in range(len(arr)):
-            r.append(int(arr[i]))
+        for i in arr:
+            r.append(int(i))
     except ValueError:
         raise NotANumberError(
             'Parameters contains a element which is not a number.'

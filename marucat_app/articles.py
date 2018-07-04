@@ -95,7 +95,7 @@ def article_content(article_id):
     comments_size = request.args.get('comments_size', 10)
     # convert and check
     try:
-        comments_size = utils_wrapper.convert_and_check_natural_number(comments_size)
+        [comments_size] = utils_wrapper.convert_and_check_natural_number(comments_size)
     except errors.NotANumberError:
         # not a number
         error = utils_wrapper.not_a_number('comments_size')
