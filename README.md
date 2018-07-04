@@ -375,6 +375,12 @@ PUT /settings/<items>
 * ✔️ 200 OK
     * 正常
 
+#### Settings list
+
+- max_size: 一次请求的最大 size
+- default_size: default size
+- default_offset: default offset
+
 ### Models
 
 #### Articles & Comments
