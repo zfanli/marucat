@@ -194,17 +194,17 @@ def deal_with_object_id(target):
         # check all keys in tar (when the tar is a dict)
         for k in tar:
             # if the attribute is ObjectId convert it to str
-            if type(tar[k]) == ObjectId:
+            if isinstance(tar[k], ObjectId):
                 tar[k] = str(tar[k])
             # if the attribute is a list, travel the dict and check all attributes
-            elif type(tar[k]) == list:
+            elif isinstance(tar[k], list):
                 tar[k] = deal_with_object_id(tar[k])
 
         return tar
 
-    if type(target) == dict:
+    if isinstance(target, dict):
         return convert_object_id(target)
-    elif type(target) == list:
+    elif isinstance(target, list):
         result = []
 
         for n in target:
