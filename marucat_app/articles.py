@@ -65,7 +65,7 @@ def articles_list_fetch():
         return jsonify(error), 404
 
     # get all counts of articles
-    all_counts = articles_helper.get_articles_count()
+    all_counts = articles_helper.get_articles_counts()
     headers = {'next-page': True}
     if (all_counts - size - offset) <= 0:
         headers['next-page'] = False

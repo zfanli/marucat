@@ -61,12 +61,12 @@ class FakeArticlesConnector(object):
         }
 
     @staticmethod
-    def get_comments(article_id, *, size, page):
+    def get_comments(article_id, *, size, offset):
         """get article content
 
         :param article_id: article ID
         :param size: fetch size
-        :param page: fetch start position
+        :param offset: fetch start position
         """
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
@@ -76,7 +76,7 @@ class FakeArticlesConnector(object):
             },
             {
                 'test_only_aid': article_id,
-                'page': page,
+                'offset': offset,
                 'size': size
             }
         ]

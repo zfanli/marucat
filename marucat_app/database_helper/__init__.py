@@ -79,15 +79,15 @@ class Articles(object):
         return self._connector.update_views(article_id)
 
     @log
-    def get_comments(self, article_id, *, size, page):
+    def get_comments(self, article_id, *, size, offset):
         """fetch comments of specific article
 
         :param article_id: article ID
         :param size: fetch size
-        :param page: fetch start position
+        :param offset: fetch start position
         :return: list of comments
         """
-        return self._connector.get_comments(article_id, size=size, page=page)
+        return self._connector.get_comments(article_id, size=size, offset=offset)
 
     @log
     def post_comment(self, article_id, *, data):
@@ -115,7 +115,7 @@ class Articles(object):
 
         :return: int, counts of articles
         """
-        return self._connector.get_articles_count()
+        return self._connector.get_articles_counts()
 
 
 class ConnectorCreator(object):

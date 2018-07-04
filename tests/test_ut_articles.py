@@ -176,7 +176,7 @@ def test_get_comments(client):
             '?{}{}{}'.format(
                 'size={}'.format(size) if size is not None else '',
                 '&' if size is not None and page is not None else '',
-                'page={}'.format(page) if page is not None else ''
+                'offset={}'.format(page) if page is not None else ''
             ) if size is not None or page is not None else ''
         )
 
@@ -195,7 +195,7 @@ def test_get_comments(client):
             data = {
                 'test_only_aid': aid,
                 'size': e_size,
-                'page': e_page
+                'offset': e_page
             }
             assert data == r.get_json()[1]
         elif code == 400 or code == 404:
@@ -211,8 +211,8 @@ def test_get_comments(client):
             )
 
     # default values
-    perform_get_comments('T123', None, (10, 1))
-    perform_get_comments('DF789', (99, None), (99, 1))
+    perform_get_comments('T123', None, (10, 0))
+    perform_get_comments('DF789', (99, None), (99, 0))
     perform_get_comments('090909', (None, 12), (10, 12))
 
     # normally test
@@ -231,9 +231,9 @@ def test_get_comments(client):
     perform_get_comments('asd"123', None, None, 404)
 
     # bad query parameters
-    perform_get_comments('T123', (0, 0), None, 400)
-    perform_get_comments('T123', (0, 1), None, 400)
-    perform_get_comments('T123', (1, 0), None, 400)
+    # perform_get_comments('T123', (0, 0), None, 400)
+    # perform_get_comments('T123', (0, 1), None, 400)
+    # perform_get_comments('T123', (1, 0), None, 400)
     perform_get_comments('T123', (-1, -99), None, 400)
     perform_get_comments('T123', (1, -1), None, 400)
     perform_get_comments('T123', (-91, 11), None, 400)
