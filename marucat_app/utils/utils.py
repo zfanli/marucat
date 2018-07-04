@@ -247,5 +247,21 @@ def create_response(headers, data, code, pretty_flag):
     return make_response(data, code, headers)
 
 
+def filter_deleted_items(items, flag):
+    """Filter deleted items
+
+    :param items: target
+    :param flag: deleted flag name, always True means deleted
+    :return: list does not contain deleted items
+    """
+
+    # just return if parameter is not a list
+    if not isinstance(items, list):
+        return items
+
+    result = filter(lambda x: not x[flag], items)
+    return [x for x in result]
+
+
 if __name__ == '__main__':
     pass

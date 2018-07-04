@@ -47,6 +47,9 @@ class ArticlesConnector(object):
             'timestamp': 1
         }
 
+        # check if size is 0 then set it to maximum (limit can not be 0)
+        size = 999 if size == 0 else size
+
         # fetch list
         cur = self._collection.find(condition, projection).skip(offset).limit(size)
 
@@ -70,23 +73,62 @@ class ArticlesConnector(object):
         :param comments_size: fetch comments size
         :raise: 404 NoSuchArticleError
         """
-        # TODO
 
+        # edit condition
         condition = {'_id': ObjectId(article_id)}
 
-        data = self._collection.find_one(condition)
+        # format
+        projection = {
+            '_id': 1,
+            'author': 1,
+            'content': 1,
+            'views': 1,
+            'tags': 1,
+            'reviews': 1,
+            'timestamp': 1
+        }
+
+        # fetch document
+        data = self._collection.find_one(condition, projection)
+
+        # fetch comments
+        data['comments'] = self.get_comments(article_id, size=comments_size, offset=0)
 
         return deal_with_object_id(data)
 
-    def get_comments(self, article_id, *, size, page):
-        """get article content
+    def get_comments(self, article_id, *, size, offset):
+        """Get article content
 
         :param article_id: article ID
         :param size: fetch size
-        :param page: fetch start position
+        :param offset: skip
         :raise: 404 NoSuchArticleError
         """
-        # TODO
+
+        # check if size is 0 then set it to maximum (limit can not be 0)
+        size = 999 if size == 0 else size
+
+        data = self._collection.aggregate([
+            # unwind comment array
+            {'$unwind': '$comments'},
+            # match specified article and filter deleted comments
+            {'$match': {'_id': ObjectId(article_id), 'comments.deleted': False}},
+            # limit size
+            {'$limit': size},
+            # for paging
+            {'$skip': offset},
+            # only fetch comments
+            {'$project': {'comments': {
+                'aid': 1,
+                'cid': 1,
+                'body': 1,
+                'from': 1,
+                'timestamp': 1
+            }}}
+        ])
+
+        # make a list and return
+        return [x['comments'] for x in data]
 
     def post_comment(self, article_id, *, data):
         """Post new comment
