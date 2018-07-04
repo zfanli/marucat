@@ -422,8 +422,8 @@ article = {
 
 #### Columns
 
-```javascript
-{
+```python
+colums = {
     'column_id': 'cl1234',
     'Column_name': 'Customize name',
     # TODO
