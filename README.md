@@ -152,8 +152,8 @@ Example:
 
 ##### 数据结构
 
-```javascript
-{
+```python
+article = {
     # Article ID
     '_id': '5b33af56d2cbe686e00b75c9',
     # Author
@@ -182,6 +182,8 @@ Example:
         },
         # ...
     ],
+    # Counts of comments
+    'review': 8,
     # Created or updated timestamp
     'timestamp': 1529248869.717813
 }
@@ -216,8 +218,8 @@ Example:
 
 ##### 数据结构
 
-```javascript
-[
+```python
+comments = [
     {
         # Article ID
         'aid': '5b33af56d2cbe686e00b75c9',
@@ -377,8 +379,8 @@ PUT /settings/<items>
 
 #### Articles & Comments
 
-```javascript
-{
+```python
+article = {
     # Article ID
     '_id': '5b33af56d2cbe686e00b75c9',
     # Author
@@ -409,6 +411,8 @@ PUT /settings/<items>
         },
         # ...
     ],
+    # Counts of comments
+    'reviews': 8,
     # Created or updated timestamp
     'timestamp': 1529248869.717813,
     # Deleted flag

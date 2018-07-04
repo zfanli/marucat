@@ -23,7 +23,7 @@ class ArticlesConnector(object):
     def get_list(self, *, size, offset, tags=None):
         """Fetch articles' list
 
-        When size is equals to zero, it is mean fetch all of the articles.
+        When size is 0, mean fetch all of the rest articles.
 
         :param size: length of list
         :param offset: counts of skips
@@ -42,7 +42,7 @@ class ArticlesConnector(object):
             'author': 1,
             'peek': 1,
             'views': 1,
-            'comments': 1,
+            'reviews': 1,
             'tags': 1,
             'timestamp': 1
         }
@@ -57,10 +57,6 @@ class ArticlesConnector(object):
         if len(result) == 0:
             return None
 
-        # set counts of comments and remove the array
-        for i in result:
-            i['reviews'] = len(i['comments'])
-            del i['comments']
         # convert ObjectId to str and return
         return deal_with_object_id(result)
 
