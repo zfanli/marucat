@@ -147,18 +147,18 @@ def article_comments_fetch(article_id):
         return jsonify(error), 404
 
     size = request.args.get('size', 10)
-    page = request.args.get('page', 1)
+    offset = request.args.get('offset', 0)
 
     # convert to number and checking
     try:
-        size, page = utils_wrapper.convert_and_check_positive_number(size, page)
+        size, offset = utils_wrapper.convert_and_check_natural_number(size, offset)
     except errors.NotANumberError:
         # not a number
-        error = utils_wrapper.not_a_number('size/page')
+        error = utils_wrapper.not_a_number('size/offset')
         return jsonify(error), 400
     except ValueError:
         # values <= 0
-        error = utils_wrapper.not_a_positive_number('size/page')
+        error = utils_wrapper.not_a_positive_number('size/offset')
         return jsonify(error), 400
 
     articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
@@ -166,7 +166,7 @@ def article_comments_fetch(article_id):
     # fetch comments
     try:
         comments = articles_helper.get_comments(
-            article_id, size=size, page=page
+            article_id, size=size, offset=offset
         )
     except errors.NoSuchArticleError:
         # 404
