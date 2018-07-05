@@ -8,7 +8,7 @@ class NoSuchArticleError(RuntimeError):
     pass
 
 
-class NoSuchCommentError(RuntimeError):
+class NoSuchArticleOrCommentError(RuntimeError):
     pass
 
 

@@ -233,7 +233,7 @@ def article_comments_delete(article_id, comment_id):
     # check if the comment ID contains special characters
     if utils.has_special_characters(comment_id):
         # 404
-        error = utils_wrapper.no_such_comment()
+        error = utils_wrapper.no_such_article_or_comment()
         return jsonify(error), 404
 
     # get articles helper
@@ -245,9 +245,9 @@ def article_comments_delete(article_id, comment_id):
         # 404
         error = utils_wrapper.no_such_article()
         return jsonify(error), 404
-    except errors.NoSuchCommentError:
+    except errors.NoSuchArticleOrCommentError:
         # 404
-        error = utils_wrapper.no_such_comment()
+        error = utils_wrapper.no_such_article_or_comment()
         return jsonify(error), 404
 
     # everything are going well

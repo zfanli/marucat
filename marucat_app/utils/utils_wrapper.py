@@ -68,15 +68,15 @@ def no_such_article():
     return create_error_message('Specified article does not exist.')
 
 
-def no_such_comment():
-    """Create a error message describe that the comment does not exist.
+def no_such_article_or_comment():
+    """Create a error message describe that the article or comment does not exist.
 
      Message
-        Specified comment does not exist.
+        Specified article or comment does not exist.
 
     :return: error message dict
     """
-    return create_error_message('Specified comment does not exist.')
+    return create_error_message('Specified article or comment does not exist.')
 
 
 def invalid_post_data(keys):

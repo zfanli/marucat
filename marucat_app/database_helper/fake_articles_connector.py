@@ -3,7 +3,7 @@
 
 """A fake db connector just for testing"""
 
-from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
+from marucat_app.utils.errors import NoSuchArticleError, NoSuchArticleOrCommentError
 
 
 def do_something(*obj):
@@ -105,7 +105,7 @@ class FakeArticlesConnector(object):
         if article_id == 'TEST_NOT_FOUND':
             raise NoSuchArticleError('No such article.')
         if comment_id == 'TEST_NOT_FOUND':
-            raise NoSuchCommentError('No such comment.')
+            raise NoSuchArticleOrCommentError('No such comment.')
 
     @staticmethod
     def get_articles_counts():
