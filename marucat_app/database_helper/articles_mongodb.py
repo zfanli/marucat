@@ -7,7 +7,7 @@ from bson import ObjectId
 
 # from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
 from marucat_app.utils.utils import deal_with_object_id, get_current_time_in_milliseconds
-from marucat_app.utils.errors import NoSuchArticleOrCommentError
+from marucat_app.utils.errors import NoSuchArticleOrCommentError, NoSuchArticleError
 
 
 class ArticlesConnector(object):
@@ -37,7 +37,7 @@ class ArticlesConnector(object):
         # edit condition
         condition = {'$match': {'deleted': False}}
         if tags:
-            condition['tags'] = tags
+            condition['$match']['tags'] = tags
 
         # fetch format
         projection = {
@@ -112,17 +112,31 @@ class ArticlesConnector(object):
                             'cond': {'$not': '$$c.deleted'}
                         }
                     }
+                },
+                'comments': {
+                    '$slice': [
+                        {
+                            '$filter': {
+                                'input': '$comments',
+                                'as': 'c',
+                                'cond': {'$not': '$$c.deleted'}
+                            }
+                        },
+                        comments_size
+                    ]
                 }
             }
         }
 
         # fetch document
-        data = self._collection.find_one(condition, projection)
+        data = self._collection.aggregate([condition, projection])
 
-        # fetch comments
-        data['comments'] = self.get_comments(article_id, size=comments_size, offset=0)
+        result = [x for x in data]
 
-        return deal_with_object_id(data)
+        if len(result) == 0:
+            raise NoSuchArticleError('No such article.')
+
+        return deal_with_object_id(result)
 
     def get_comments(self, article_id, *, size, offset):
         """Get article content
