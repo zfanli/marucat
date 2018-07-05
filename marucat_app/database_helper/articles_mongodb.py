@@ -3,9 +3,11 @@
 
 """Articles connector, driven by MongoDB."""
 
-# from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
-from marucat_app.utils.utils import deal_with_object_id
 from bson import ObjectId
+
+# from marucat_app.utils.errors import NoSuchArticleError, NoSuchCommentError
+from marucat_app.utils.utils import deal_with_object_id, get_current_time_in_milliseconds
+from marucat_app.utils.errors import NoSuchArticleOrCommentError
 
 
 class ArticlesConnector(object):
@@ -13,6 +15,7 @@ class ArticlesConnector(object):
 
     Driven by MongoDB.
     """
+
     def __init__(self, collection):
         """Initial mongodb connector
 
@@ -32,26 +35,41 @@ class ArticlesConnector(object):
         """
 
         # edit condition
-        condition = {'deleted': False}
+        condition = {'$match': {'deleted': False}}
         if tags:
             condition['tags'] = tags
 
         # fetch format
         projection = {
-            '_id': 1,
-            'author': 1,
-            'peek': 1,
-            'views': 1,
-            'reviews': 1,
-            'tags': 1,
-            'timestamp': 1
+            '$project': {
+                '_id': 1,
+                'author': 1,
+                'peek': 1,
+                'views': 1,
+                'tags': 1,
+                'timestamp': 1,
+                'reviews': {
+                    '$size': {
+                        '$filter': {
+                            'input': '$comments',
+                            'as': 'c',
+                            'cond': {'$not': '$$c.deleted'}
+                        }
+                    }
+                }
+            }
         }
 
         # check if size is 0 then set it to maximum (limit can not be 0)
         size = 999 if size == 0 else size
 
         # fetch list
-        cur = self._collection.find(condition, projection).skip(offset).limit(size)
+        cur = self._collection.aggregate([
+            condition,
+            projection,
+            {'$limit': size},
+            {'$skip': offset}
+        ])
 
         # convert to list
         result = [i for i in cur]
@@ -75,17 +93,27 @@ class ArticlesConnector(object):
         """
 
         # edit condition
-        condition = {'_id': ObjectId(article_id)}
+        condition = {'$match': {'_id': ObjectId(article_id), 'deleted': False}}
 
         # format
         projection = {
-            '_id': 1,
-            'author': 1,
-            'content': 1,
-            'views': 1,
-            'tags': 1,
-            'reviews': 1,
-            'timestamp': 1
+            '$project': {
+                '_id': 1,
+                'author': 1,
+                'content': 1,
+                'views': 1,
+                'tags': 1,
+                'timestamp': 1,
+                'reviews': {
+                    '$size': {
+                        '$filter': {
+                            'input': '$comments',
+                            'as': 'c',
+                            'cond': {'$not': '$$c.deleted'}
+                        }
+                    }
+                }
+            }
         }
 
         # fetch document
@@ -145,10 +173,32 @@ class ArticlesConnector(object):
         :param article_id: article ID
         :param comment_id: comment ID
         :raises:
-            - 404 NoSuchArticleError
-            - 404 NoSuchCommentError
+            - 404 NoSuchArticleOrCommentError
         """
-        # TODO
+        # update
+        r = self._collection.update_one(
+            # match specified article and comment
+            {
+                '_id': ObjectId(article_id),
+                'comments': {
+                    '$elemMatch': {
+                        'cid': ObjectId(comment_id),
+                        'deleted': False
+                    }
+                }
+            },
+            # soft delete
+            {
+                '$set': {
+                    'comments.$.deleted': True,
+                    'comments.$.deleted_time': get_current_time_in_milliseconds()
+                }
+            }
+        )
+
+        # if there is nothing matched
+        if r.matched_count == 0:
+            raise NoSuchArticleOrCommentError('No such article or comment.')
 
     def get_articles_counts(self):
         """Get articles count

@@ -37,8 +37,6 @@ def make_data(peek, content, views, tags, comment, timestamp):
         'tags': tags,
         # Comments
         'comments': comment,
-        # Counts of comments
-        'reviews': 8,
         # Created or updated timestamp
         'timestamp': timestamp,
         # Deleted flag
