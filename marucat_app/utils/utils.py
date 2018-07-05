@@ -39,6 +39,21 @@ def create_error_message(message='Error was happened.'):
     return {'error': message}
 
 
+def create_unimplemented_message(param, method):
+    """Message to tell you request is succeed but requested API is unimplemented.
+
+    :param param: request param
+    :param method: request method
+    :return: message object
+    """
+    date = {
+        'message': 'Request is succeed, but this API is unimplemented.',
+        'param': param,
+        'method': method
+    }
+    return date
+
+
 def convert_to_number(*arr):
     """Convert all elements of the arr to number
 
@@ -230,6 +245,7 @@ def create_response(headers, data, code, pretty_flag):
     :param headers: dict, setting headers
     :param data: pass to jsonify method
     :param code: int, status code
+    :param pretty_flag: control pretty print or not
     :return: response
     """
     if not headers:

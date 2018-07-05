@@ -267,8 +267,8 @@ def article_content_save(article_id):
 
     # TODO
 
-    r = {'article_id': article_id, 'method': 'PUT'}
-    return jsonify(r), 200
+    r = utils.create_unimplemented_message(article_id, 'PUT')
+    return jsonify(r), 406
 
 
 @bp.route('/<article_id>', methods=['POST'])
@@ -280,8 +280,8 @@ def article_content_create(article_id):
 
     # TODO
 
-    r = {'article_id': article_id, 'method': 'POST'}
-    return jsonify(r), 200
+    r = utils.create_unimplemented_message(article_id, 'POST')
+    return jsonify(r), 406
 
 
 @bp.route('/<article_id>', methods=['DELETE'])
@@ -293,5 +293,5 @@ def article_content_delete(article_id):
 
     # TODO
 
-    r = {'article_id': article_id, 'method': 'DELETE'}
-    return jsonify(r), 200
+    r = utils.create_unimplemented_message(article_id, 'DELETE')
+    return jsonify(r), 406
