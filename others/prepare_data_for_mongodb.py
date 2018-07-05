@@ -4,6 +4,7 @@
 """Prepare some data for development or testing."""
 
 from pymongo import MongoClient
+from bson import ObjectId
 
 from marucat_app.utils.utils import get_initial_file, get_current_time_in_milliseconds
 
@@ -65,10 +66,14 @@ def make_comment(aid, cid, body, timestamp, deleted):
 
 if __name__ == '__main__':
     articles = get_articles_collection()
-    comments = list(map(lambda x: make_comment(
-        '1234', x, 'Just comment for {}'.format(x),
-        get_current_time_in_milliseconds(), False if x % 3 != 1 else True), range(8)))
     data = make_data('Just a peek at there.', 'Nothing here',
-                     998, ['OK', 'red', 'blue'], comments, get_current_time_in_milliseconds())
+                     998, ['OK', 'red', 'blue'], None, get_current_time_in_milliseconds())
     articles.delete_many({})
-    articles.insert_one(data)
+    rid = articles.insert_one(data)
+
+    comments = list(map(lambda x: make_comment(
+        rid.inserted_id, ObjectId(), 'Just comment for {}'.format(x),
+        get_current_time_in_milliseconds(), False if x % 3 != 1 else True), range(8)))
+
+    re = articles.update({'_id': rid.inserted_id}, {'$set': {'comments': comments}})
+    print(re)
