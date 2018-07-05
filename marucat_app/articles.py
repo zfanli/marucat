@@ -77,7 +77,7 @@ def articles_list_fetch():
     return utils.create_response(headers, a_list, 200, pretty_flag)
 
 
-@bp.route('/aid<article_id>', methods=['GET'])
+@bp.route('/<article_id>', methods=['GET'])
 def article_content(article_id):
     """Fetch article's content by id
 
@@ -125,7 +125,7 @@ def article_content(article_id):
     return jsonify(content), 200
 
 
-@bp.route('/aid<article_id>/comments', methods=['GET'])
+@bp.route('/<article_id>/comments', methods=['GET'])
 def article_comments_fetch(article_id):
     """Fetch article's comments by id
 
@@ -177,7 +177,7 @@ def article_comments_fetch(article_id):
     return jsonify(comments), 200
 
 
-@bp.route('/aid<article_id>/comments', methods=['POST'])
+@bp.route('/<article_id>/comments', methods=['POST'])
 def article_comments_save(article_id):
     """Push comment
 
@@ -218,7 +218,7 @@ def article_comments_save(article_id):
     return '', 201
 
 
-@bp.route('/aid<article_id>/comments/<comment_id>', methods=['DELETE'])
+@bp.route('/<article_id>/comments/<comment_id>', methods=['DELETE'])
 def article_comments_delete(article_id, comment_id):
     """Delete specific comment
 
@@ -258,7 +258,7 @@ def article_comments_delete(article_id, comment_id):
 # Those api might not be implemented.
 # Just placeholders for now.
 
-@bp.route('/aid<article_id>', methods=['PUT'])
+@bp.route('/<article_id>', methods=['PUT'])
 def article_content_save(article_id):
     """Update article's content
 
@@ -271,7 +271,7 @@ def article_content_save(article_id):
     return jsonify(r), 200
 
 
-@bp.route('/aid<article_id>', methods=['POST'])
+@bp.route('/<article_id>', methods=['POST'])
 def article_content_create(article_id):
     """Create article
 
@@ -284,7 +284,7 @@ def article_content_create(article_id):
     return jsonify(r), 200
 
 
-@bp.route('/aid<article_id>', methods=['DELETE'])
+@bp.route('/<article_id>', methods=['DELETE'])
 def article_content_delete(article_id):
     """Delete article
 

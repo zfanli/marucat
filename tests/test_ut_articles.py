@@ -110,7 +110,7 @@ def test_get_content(client):
     def perform_get_content(article_id, code=200):
         """Test template"""
 
-        url = '/articles/aid{}'.format(article_id)
+        url = '/articles/{}'.format(article_id)
         r = client.get(url)
 
         print(url, r.status_code)
@@ -133,7 +133,7 @@ def test_get_content(client):
 
     # 404 without error message feedback below
     # /article/aid
-    perform_get_content('', 404)
+    # perform_get_content('', 404)
 
     # 404 with error message feedback below
     # /article/aidTEST_NOT_FOUND
@@ -171,7 +171,7 @@ def test_get_comments(client):
         if inputted is not None:
             size, page = inputted
 
-        url = '/articles/aid{}/comments{}'.format(
+        url = '/articles/{}/comments{}'.format(
             aid if aid is not None else '',
             '?{}{}{}'.format(
                 'size={}'.format(size) if size is not None else '',
@@ -247,7 +247,7 @@ def test_post_comments(client):
 
     def perform_post_comments(article_id, data, code=201):
 
-        url = '/articles/aid{}/comments'.format(article_id)
+        url = '/articles/{}/comments'.format(article_id)
         r = client.post(url, json=data)
 
         print(url, r.status_code)
@@ -283,7 +283,7 @@ def test_delete_comment(client):
 
     def perform_delete_comment(article_id, comment_id, code=200):
 
-        url = '/articles/aid{}/comments/{}'.format(
+        url = '/articles/{}/comments/{}'.format(
             article_id, comment_id
         )
 

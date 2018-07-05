@@ -128,7 +128,7 @@ Date: Sun, 01 Jul 2018 15:00:38 GMT
 #### 获取文章内容
 
 ```
-GET /articles/aid<article_id>
+GET /articles/<article_id>
 
 Query parameters
     comments_size: number, fetch comments size, 10 by default
@@ -137,7 +137,7 @@ Parameter
     article_id: string, article ID
 
 Example:
-    GET /articles/aid123456?comment_size=10
+    GET /articles/5b33af56d2cbe686e00b75c9?comment_size=10
 ```
 
 `comments_size` 获取评论数，一般使用默认值。默认值由全局设置中取得，默认为 `10`。
@@ -170,9 +170,9 @@ article = {
     'comments': [
         {
             # Article ID
-            'aid': 'a12345',
+            'aid': '5b33af56d2cbe686e00b75c9',
             # Comment ID
-            'cid': 'c12345',
+            'cid': '5b3dc242f0470538510b28d6',
             # Who wrote the comment
             'from': 'From user',
             # Comment body
@@ -192,7 +192,7 @@ article = {
 #### 获取评论
 
 ```
-GET /articles/aid<article_id>/comments
+GET /articles/<article_id>/comments
 
 Parameter
     article_id: string, article ID
@@ -202,7 +202,7 @@ Query parameters
     page: number, fetch start position, 1 by default
 
 Example:
-    GET /articles/aid123456/comment?size=10&page=1
+    GET /articles/5b3dc242f0470538510b28d6/comment?size=10&page=1
 ```
 
 ##### 状态码
@@ -224,7 +224,7 @@ comments = [
         # Article ID
         'aid': '5b33af56d2cbe686e00b75c9',
         # Comment ID
-        'cid': 'c12345',
+        'cid': '5b3dc242f0470538510b28d6',
         # Who wrote the comment
         'from': 'From user',
         # Comment body
@@ -239,7 +239,7 @@ comments = [
 #### 添加评论
 
 ```
-POST /articles/aid<article_id>/comments
+POST /articles/<article_id>/comments
 
 Parameter
     article_id: string, article ID
@@ -251,7 +251,7 @@ Post data
     timestamp: number, created or updated timestamp
 
 Example:
-    POST /articles/aid12345/comments
+    POST /articles/5b3dc242f0470538510b28d6/comments
     DATA {
         "from": "Richard",
         "body": "Hi, it's just a comment!",
@@ -272,7 +272,7 @@ Example:
 #### 删除评论
 
 ```
-DELETE /articles/aid<article_id>/comments/cid<comment_id>
+DELETE /articles/<article_id>/comments/<comment_id>
 
 Parameter
     article_id: string, article ID
@@ -319,7 +319,7 @@ GET /columns/<column_id>
 #### 更新文章
 
 ```
-PUT /articles/aid<article_id>
+PUT /articles/<article_id>
 ```
 
 ##### 状态码
@@ -330,7 +330,7 @@ PUT /articles/aid<article_id>
 #### 创建文章
 
 ```
-POST /articles/aid<article_id>
+POST /articles/<article_id>
 ```
 
 ##### 状态码
@@ -341,7 +341,7 @@ POST /articles/aid<article_id>
 #### 删除文章
 
 ```
-DELETE /articles/aid<article_id>
+DELETE /articles/<article_id>
 ```
 
 ##### 状态码
@@ -405,7 +405,7 @@ article = {
             # Article ID
             'aid': '5b33af56d2cbe686e00b75c9',
             # Comment ID
-            'cid': 'c12345',
+            'cid': '5b3dc242f0470538510b28d7',
             # Who wrote the comment
             'from': 'From user',
             # Comment body
