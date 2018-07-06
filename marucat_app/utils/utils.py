@@ -253,14 +253,70 @@ def create_response(headers, data, code, pretty_flag):
     if not isinstance(headers, dict):
         raise ValueError('Headers should be a dict.')
 
+    # set JSON MIME
     headers['Content-Type'] = 'application/json'
 
+    # check if needs pretty print
     if pretty_flag:
-        data = dumps(data, sort_keys=True, indent=2)
+        data = dumps(data, sort_keys=True, indent=2) + '\n'
     else:
         data = dumps(data)
 
+    # return response
     return make_response(data, code, headers)
+
+
+def isinstance_all(ins, *tar):
+    """Apply isinstance() to all elements of target
+
+    :param ins: types
+    :param tar: target tuple
+    :return: True if all True and False if anyone False
+    """
+    for x in tar:
+        if not isinstance(x, ins):
+            return False
+
+    return True
+
+
+def set_next_page_and_data(counts, size, offset, data, pretty_flag):
+    """Deal with json data and headers
+
+    - Calculate next-page and set to header
+    - Set MIME to JSON type
+    - Dump data and format it if necessary
+
+    :param counts: counts
+    :param size: size
+    :param offset: offset
+    :param data: pass to jsonify method
+    :param pretty_flag: control pretty print or not
+    :return: header, data
+    """
+
+    if not isinstance_all(int, size, offset, counts):
+        raise ValueError('Headers should be a dict.')
+
+    next_page = False
+
+    if (counts - size - offset) > 0:
+        next_page = True
+
+    # set JSON MIME
+    headers = {
+        'Content-Type': 'application/json',
+        'next-page': next_page
+    }
+
+    # check if needs pretty print
+    if pretty_flag:
+        data = dumps(data, sort_keys=True, indent=2) + '\n'
+    else:
+        data = dumps(data)
+
+    # return response
+    return headers, data
 
 
 def filter_deleted_items(items, flag):

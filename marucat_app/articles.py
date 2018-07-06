@@ -3,7 +3,7 @@
 
 """Blueprint of articles"""
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, current_app, jsonify, request, make_response
 
 from marucat_app.utils import errors
 from marucat_app.utils import utils
@@ -66,15 +66,13 @@ def articles_list_fetch():
 
     # get all counts of articles
     all_counts = articles_helper.get_articles_counts()
-    headers = {'next-page': True}
-    if (all_counts - size - offset) <= 0:
-        headers['next-page'] = False
-
     # pretty print if required or in debug mode
     pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
 
+    headers, data = utils.set_next_page_and_data(all_counts, size, offset, a_list, pretty_flag)
+
     # 200
-    return utils.create_response(headers, a_list, 200, pretty_flag)
+    return make_response(data, 200, headers)
 
 
 @bp.route('/<article_id>', methods=['GET'])
@@ -121,8 +119,15 @@ def article_content(article_id):
         error = utils_wrapper.no_such_article()
         return jsonify(error), 404
 
+    # pretty print if required or in debug mode
+    pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
+
+    headers, data = utils.set_next_page_and_data(
+        content['reviews'], comments_size, 0, content, pretty_flag
+    )
+
     # 200
-    return jsonify(content), 200
+    return make_response(data, 200, headers)
 
 
 @bp.route('/<article_id>/comments', methods=['GET'])
@@ -172,6 +177,15 @@ def article_comments_fetch(article_id):
         # 404
         error = utils_wrapper.no_such_article()
         return jsonify(error), 404
+    # TODO
+    #
+    # # pretty print if required or in debug mode
+    # pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
+    #
+    # headers, data = utils.set_next_page_and_data(
+    #     content['reviews'], size, offset, content, pretty_flag
+    # )
+
 
     # 200
     return jsonify(comments), 200

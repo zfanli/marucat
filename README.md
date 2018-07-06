@@ -79,13 +79,13 @@ GET /articles
 GET /articles?size=10&offset=0
 ```
 
-`size` 一般使用默认值。默认值由全局设定中取得，通常为 `10`。
+`size` 一般使用默认值。默认值使用设定值 `default_size`，通常为 `10`。值为 `0` 时将使用设定值中的 `max_size（单次请求拉取最大值）`。
 
 `offset` 默认为 `0`，分页时需要设定。
 
 `tags` 参数可以是一个字符串或者一个字符串数组，默认为空，即获取所有。
 
-响应头中存放一个 `next-page` key，表示是否存在下一页，为 False 时表示没有下一页。
+响应头中存放一个 `next-page` key，提示是否存在下一页，当其值为 `False` 时表示**不存在下一页**。
 
 ##### 状态码
 
@@ -93,33 +93,34 @@ GET /articles?size=10&offset=0
     * 正常
 * ✖️ 400 BAD REQUEST
     * size/offset 非数值
-    * size/offset 小于等于0
+    * size/offset 小于0
 * ✖️ 404 NOT FOUND
     * 无内容（指定 tags 下）
 
 ##### 请求示例
 
 ```
-$ curl http://127.0.0.1:5000/articles?tags=OK -i
+$ curl http://127.0.0.1:5000/articles -i
 HTTP/1.0 200 OK
 next-page: False
 Content-Type: application/json
-Content-Length: 242
-Server: Werkzeug/0.14.1 Python/3.6.4
-Date: Sun, 01 Jul 2018 15:00:38 GMT
+Content-Length: 264
+Server: Werkzeug/0.14.1 Python/3.6.5
+Date: Fri, 06 Jul 2018 03:01:04 GMT
 
 [
   {
-    "_id": "5b3653aed2cbe68c10b0d9df",
+    "_id": "5b3de906f047053cf2847176",
     "author": "Richard",
+    "deleted": false,
     "peek": "Just a peek at there.",
-    "reviews": 8,
+    "reviews": 5,
     "tags": [
       "OK",
       "red",
       "blue"
     ],
-    "timestamp": 1530287022474.043,
+    "timestamp": 1530784006955.605,
     "views": 998
   }
 ]
@@ -142,6 +143,8 @@ Example:
 
 `comments_size` 获取评论数，一般使用默认值。默认值由全局设置中取得，默认为 `10`。
 
+响应头中存放一个 `next-page` key，提示是否存在下一页，当其值为 `False` 时表示**不存在下一页**。
+
 ##### 状态码
 
 * ✔️ 200 OK
@@ -150,42 +153,47 @@ Example:
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
-##### 数据结构
+##### 请求示例
 
-```python
-article = {
-    # Article ID
-    '_id': '5b33af56d2cbe686e00b75c9',
-    # Author
-    'author': 'AUTHOR',
-    # Peek or abstract
-    'peek': 'A peek of content.',
-    # Full content
-    'content': 'The full content of article.',
-    # Counts of views
-    'views': 999,
-    # Tags
-    'tags': ['TAG', 'A', 'B'],
-    # Comments
-    'comments': [
-        {
-            # Article ID
-            'aid': '5b33af56d2cbe686e00b75c9',
-            # Comment ID
-            'cid': '5b3dc242f0470538510b28d6',
-            # Who wrote the comment
-            'from': 'From user',
-            # Comment body
-            'body': 'Content of comment.',
-            # Created or updated timestamp
-            'timestamp': 1529248843.301676
-        },
-        # ...
-    ],
-    # Counts of comments
-    'review': 8,
-    # Created or updated timestamp
-    'timestamp': 1529248869.717813
+```
+$ curl http://127.0.0.1:5000/articles/5b3de906f047053cf2847176?comments_size=2 -i
+HTTP/1.0 200 OK
+next-page: True
+Content-Type: application/json
+Content-Length: 655
+Server: Werkzeug/0.14.1 Python/3.6.5
+Date: Fri, 06 Jul 2018 03:14:50 GMT
+
+{
+  "_id": "5b3de906f047053cf2847176",
+  "author": "Richard",
+  "comments": [
+    {
+      "aid": "5b3de906f047053cf2847176",
+      "body": "Just comment for 0",
+      "cid": "5b3de906f047053cf2847177",
+      "deleted": false,
+      "from": "Mary",
+      "timestamp": 1530784006963.624
+    },
+    {
+      "aid": "5b3de906f047053cf2847176",
+      "body": "Just comment for 2",
+      "cid": "5b3de906f047053cf2847179",
+      "deleted": false,
+      "from": "Mary",
+      "timestamp": 1530784006963.6382
+    }
+  ],
+  "content": "Nothing here",
+  "reviews": 5,
+  "tags": [
+    "OK",
+    "red",
+    "blue"
+  ],
+  "timestamp": 1530784006955.605,
+  "views": 998
 }
 ```
 
@@ -199,40 +207,52 @@ Parameter
 
 Query parameters
     size: number, fetch size, 10 by default
-    page: number, fetch start position, 1 by default
+    offset: number, skip, 0 by default
 
 Example:
-    GET /articles/5b3dc242f0470538510b28d6/comment?size=10&page=1
+    GET /articles/5b3dc242f0470538510b28d6/comment?size=10&offset=1
 ```
+
+响应头中存放一个 `next-page` key，提示是否存在下一页，当其值为 `False` 时表示**不存在下一页**。
 
 ##### 状态码
 
 * ✔️ 200 OK
     * 正常
 * ✖️ 400 BAD REQUEST
-    * size/page 非数值
-    * size/page 小于等于0
+    * size/offset 非数值
+    * size/offset 小于0
 * ✖️ 404 NOT FOUND
     * article id 未赋值（response 无 error 反馈）
     * article 不存在（response 有 error 反馈）
 
-##### 数据结构
+##### 请求示例
 
-```python
-comments = [
-    {
-        # Article ID
-        'aid': '5b33af56d2cbe686e00b75c9',
-        # Comment ID
-        'cid': '5b3dc242f0470538510b28d6',
-        # Who wrote the comment
-        'from': 'From user',
-        # Comment body
-        'body': 'Content of comment.',
-        # Created or updated timestamp
-        'timestamp': 1529248843.301676
-    },
-    # ...
+```
+$ curl "http://127.0.0.1:5000/articles/5b3de906f047053cf2847176/comments?size=2&offset=1" -i
+HTTP/1.0 200 OK
+Content-Type: application/json
+Content-Length: 411
+Server: Werkzeug/0.14.1 Python/3.6.5
+Date: Fri, 06 Jul 2018 02:33:40 GMT
+
+[
+  {
+    "aid": "5b3de906f047053cf2847176",
+    "body": "Just comment for 2",
+    "cid": "5b3de906f047053cf2847179",
+    "deleted": false,
+    "from": "Mary",
+    "timestamp": 1530784006963.6382
+  },
+  {
+    "aid": "5b3de906f047053cf2847176",
+    "body": "Just comment for 3",
+    "cid": "5b3de906f047053cf284717a",
+    "deleted": false,
+    "from": "Mary",
+    "timestamp": 1530784006963.649
+  }
 ]
 ```
 
@@ -247,7 +267,7 @@ Parameter
 Post data
     from: string, user name
     body: string, comment body
-    reply_id: string, comment ID for reply to, not necessary
+    reply_id: string, optional, comment ID for reply to
     timestamp: number, created or updated timestamp
 
 Example:
@@ -379,7 +399,7 @@ PUT /settings/<items>
 
 - max_size: 一次请求的最大 size
 - default_size: default size
-- default_offset: default offset
+<!--- default_offset: default offset 没意义 -->
 
 ### Models
 

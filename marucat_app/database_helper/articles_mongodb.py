@@ -23,7 +23,7 @@ class ArticlesConnector(object):
         """
         self._collection = collection
 
-    def get_list(self, *, size, offset, tags=None):
+    def get_list(self, *, size, offset, tags=None, fetch_deleted=False):
         """Fetch articles' list
 
         When size is 0, mean fetch all of the rest articles.
@@ -31,11 +31,14 @@ class ArticlesConnector(object):
         :param size: length of list
         :param offset: counts of skips
         :param tags: tags
+        :param fetch_deleted: fetch deleted object flag, only admin can set to True
         :return: fetched list, or None if nothing was fetched
         """
 
         # edit condition
-        condition = {'$match': {'deleted': False}}
+        condition = {'$match': {}}
+        if not fetch_deleted:
+            condition['$match']['deleted'] = False
         if tags:
             condition['$match']['tags'] = tags
 
@@ -48,6 +51,7 @@ class ArticlesConnector(object):
                 'views': 1,
                 'tags': 1,
                 'timestamp': 1,
+                'deleted': 1,
                 'reviews': {
                     '$size': {
                         '$filter': {
@@ -131,46 +135,52 @@ class ArticlesConnector(object):
         # fetch document
         data = self._collection.aggregate([condition, projection])
 
+        # put result into list, it should be only one element if succeed
         result = [x for x in data]
 
+        # if nothing was fetched raise error
         if len(result) == 0:
             raise NoSuchArticleError('No such article.')
 
-        return deal_with_object_id(result)
+        # deal with ObjectId and return the first element
+        return deal_with_object_id(result)[0]
 
-    def get_comments(self, article_id, *, size, offset):
+    def get_comments(self, article_id, *, size, offset, fetch_deleted=False):
         """Get article content
 
         :param article_id: article ID
         :param size: fetch size
         :param offset: skip
+        :param fetch_deleted: fetch deleted object flag, only admin can set to True
         :raise: 404 NoSuchArticleError
         """
 
         # check if size is 0 then set it to maximum (limit can not be 0)
         size = 999 if size == 0 else size
 
+        # make condition
+        match_condition = {'_id': ObjectId(article_id)}
+        # fetch deleted flag is False by default, only admin can set to True
+        if not fetch_deleted:
+            match_condition['comments.deleted'] = False
+
         data = self._collection.aggregate([
             # unwind comment array
             {'$unwind': '$comments'},
-            # match specified article and filter deleted comments
-            {'$match': {'_id': ObjectId(article_id), 'comments.deleted': False}},
-            # limit size
-            {'$limit': size},
-            # for paging
+            # match condition
+            {'$match': match_condition},
+            # for paging, skip previous object
             {'$skip': offset},
+            # limit size, keep the order after skip, avoid be affected by skip
+            {'$limit': size},
             # only fetch comments
-            {'$project': {'comments': {
-                'aid': 1,
-                'cid': 1,
-                'body': 1,
-                'from': 1,
-                'timestamp': 1
-            }}}
+            {'$project': {'comments': 1}},
         ])
 
-        # make a list and return
-        return [x['comments'] for x in data]
+        # make a list
+        result = [x['comments'] for x in data]
+        # deal with ObjectId and return
+        return deal_with_object_id(result)
 
     def post_comment(self, article_id, *, data):
         """Post new comment
