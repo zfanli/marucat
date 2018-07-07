@@ -198,7 +198,7 @@ def article_comments_save(article_id):
     Post Data
         - from: from user
         - body: body of comment
-        - reply_id: comment ID for reply to, *not necessary*
+        - reply_id: comment ID for reply to, *optional*
         - timestamp: created or updated timestamp
 
     :param article_id: article ID

@@ -195,11 +195,27 @@ class ArticlesConnector(object):
     def post_comment(self, article_id, *, data):
         """Post new comment
 
+        Post data should be checked before this method called.
+
         :param article_id: article ID
         :param data: comment data
         :raise: 404 NoSuchArticleError
         """
-        # TODO
+
+        # generate new comment ID
+        data['cid'] = ObjectId()
+        # set article ID to comment
+        data['aid'] = ObjectId(article_id)
+
+        # execute update to push new comment
+        result = self._collection.update_one(
+            {'_id': ObjectId(article_id)},
+            {'$push': {'comments': data}}
+        )
+
+        # check result
+        if result.modified_count == 0:
+            raise NoSuchArticleError('No such article.')
 
     def delete_comment(self, article_id, comment_id):
         """Delete a comment
