@@ -57,6 +57,7 @@ class FakeArticlesConnector(object):
             raise NoSuchArticleError('No such article.')
         return {
             'aid': article_id,
+            'reviews': 99,
             'comments_size': comments_size
         }
 
@@ -79,7 +80,7 @@ class FakeArticlesConnector(object):
                 'offset': offset,
                 'size': size
             }
-        ]
+        ], 99
 
     @staticmethod
     def post_comment(article_id, *, data):

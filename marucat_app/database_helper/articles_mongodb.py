@@ -153,34 +153,44 @@ class ArticlesConnector(object):
         :param offset: skip
         :param fetch_deleted: fetch deleted object flag, only admin can set to True
         :raise: 404 NoSuchArticleError
+        :return: array of comments, count
         """
 
         # check if size is 0 then set it to maximum (limit can not be 0)
         size = 999 if size == 0 else size
 
-        # make condition
-        match_condition = {'_id': ObjectId(article_id)}
-        # fetch deleted flag is False by default, only admin can set to True
-        if not fetch_deleted:
-            match_condition['comments.deleted'] = False
-
         data = self._collection.aggregate([
             # unwind comment array
             {'$unwind': '$comments'},
             # match condition
-            {'$match': match_condition},
-            # for paging, skip previous object
-            {'$skip': offset},
-            # limit size, keep the order after skip, avoid be affected by skip
-            {'$limit': size},
+            {'$match': {
+                '_id': ObjectId(article_id),
+                'comments.deleted': False if not fetch_deleted else True
+            }},
+            # group date and calculate count
+            {'$group': {
+                '_id': '$_id',
+                'count': {'$sum': 1},
+                'comments': {
+                    '$push': '$comments'
+                }
+            }},
             # only fetch comments
-            {'$project': {'comments': 1}},
+            {'$project': {
+                'count': 1,
+                'comments': {'$slice': ['$comments', offset, size]},
+            }},
         ])
 
-        # make a list
-        result = [x['comments'] for x in data]
+        # get result
+        result = [x for x in data]
+
+        # check result
+        if len(result) == 0:
+            raise NoSuchArticleError('No such articles.')
+
         # deal with ObjectId and return
-        return deal_with_object_id(result)
+        return deal_with_object_id(result[0]['comments']), result[0]['count']
 
     def post_comment(self, article_id, *, data):
         """Post new comment

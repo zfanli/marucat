@@ -85,7 +85,7 @@ class Articles(object):
         :param article_id: article ID
         :param size: fetch size
         :param offset: fetch start position
-        :return: list of comments
+        :return: list of comments, count
         """
         return self._connector.get_comments(article_id, size=size, offset=offset)
 

@@ -170,25 +170,23 @@ def article_comments_fetch(article_id):
 
     # fetch comments
     try:
-        comments = articles_helper.get_comments(
+        comments, count = articles_helper.get_comments(
             article_id, size=size, offset=offset
         )
     except errors.NoSuchArticleError:
         # 404
         error = utils_wrapper.no_such_article()
         return jsonify(error), 404
-    # TODO
-    #
-    # # pretty print if required or in debug mode
-    # pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
-    #
-    # headers, data = utils.set_next_page_and_data(
-    #     content['reviews'], size, offset, content, pretty_flag
-    # )
 
+    # pretty print if required or in debug mode
+    pretty_flag = current_app.config['JSONIFY_PRETTYPRINT_REGULAR'] or current_app.debug
+
+    headers, data = utils.set_next_page_and_data(
+        count, size, offset, comments, pretty_flag
+    )
 
     # 200
-    return jsonify(comments), 200
+    return make_response(data, 200, headers)
 
 
 @bp.route('/<article_id>/comments', methods=['POST'])
