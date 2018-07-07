@@ -206,6 +206,8 @@ class ArticlesConnector(object):
         data['cid'] = ObjectId()
         # set article ID to comment
         data['aid'] = ObjectId(article_id)
+        # initial deleted flag
+        data['deleted'] = False
 
         # execute update to push new comment
         result = self._collection.update_one(
