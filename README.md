@@ -289,6 +289,18 @@ Example:
 * ✖️ 404 NOT FOUND
     * article 不存在
 
+##### 请求示例
+
+```
+$ curl "http://127.0.0.1:5000/articles/5b3e2679d2cbe6974cc6e9c2/comments" -i -X POST -d '{"from": "Richard2", "body": "First post comments from api.", "timestamp": "12345"}' -H 'Content-Type: application/json'
+HTTP/1.0 201 CREATED
+Content-Type: text/html; charset=utf-8
+Content-Length: 0
+Server: Werkzeug/0.14.1 Python/3.6.4
+Date: Sat, 07 Jul 2018 16:10:15 GMT
+
+```
+
 #### 删除评论
 
 ```
@@ -300,6 +312,18 @@ Parameter
 
 Example:
     DELETE /articles/aid12345/comments/cid12345
+```
+
+##### 请求示例
+
+```
+curl "http://127.0.0.1:5000/articles/5b3e2679d2cbe6974cc6e9c2/comments/5b40e6e3d2cbe6adb5b60f9b" -i -X DELETE
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 0
+Server: Werkzeug/0.14.1 Python/3.6.4
+Date: Sat, 07 Jul 2018 16:14:48 GMT
+
 ```
 
 ##### 状态码
