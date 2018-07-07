@@ -132,6 +132,7 @@ class ConnectorCreator(object):
         if db == 'test':
             # TEST mode load fake db helper
             self._articles = Articles(FakeArticlesConnector())
+            self._settings = None
         elif db == 'mongodb':
             # load MongoDB helper
             self.init_mongodb(test)
@@ -171,6 +172,8 @@ class ConnectorCreator(object):
         # initial mongodb connector
         # Articles: SCHEMA/articles
         self._articles = Articles(ArticlesConnector(db[articles_collection]))
+        # Settings: SCHEMA/settings
+        self._settings = None
 
     @property
     def articles_helper(self):
