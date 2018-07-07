@@ -5,9 +5,7 @@
 
 from flask import Blueprint, current_app, jsonify, request, make_response
 
-from marucat_app.utils import errors
-from marucat_app.utils import utils
-from marucat_app.utils import utils_wrapper
+from marucat_app.utils import errors, utils, utils_wrapper
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
