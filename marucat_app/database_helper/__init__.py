@@ -156,6 +156,7 @@ class ConnectorCreator(object):
         url = mongo_conf['url']
         port = int(mongo_conf['port'])
         schema = mongo_conf['schema']
+        logs_collection = mongo_conf['logs_collection']
         # if test flag is True set current schema to test schema
         if test_flag:
             schema = mongo_conf['test_schema']
@@ -166,7 +167,7 @@ class ConnectorCreator(object):
         # test connection
         # leave a log show the connect time
         db = client[schema]
-        connect_log = db.connect_log
+        connect_log = db[logs_collection]
         connect_log.insert_one({'time': get_current_time_in_milliseconds()})
 
         # initial mongodb connector
