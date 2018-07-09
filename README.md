@@ -142,6 +142,8 @@ Example:
     GET /articles/5b33af56d2cbe686e00b75c9?comment_size=10
 ```
 
+每次获取文章内容时，将更新文章的 `views`。
+
 `comments_size` 获取评论数，一般使用默认值。默认值由全局设置中取得，默认为 `10`。
 
 响应头中存放一个 `next-page` key，提示是否存在下一页，当其值为 `False` 时表示**不存在下一页**。
@@ -477,9 +479,26 @@ article = {
 
 ```python
 colums = {
-    'column_id': 'cl1234',
+    'column_id': '5b3e2679d2cbe6974cc6e9c2',
     'Column_name': 'Customize name',
     # TODO
+}
+```
+
+#### Settings
+
+```python
+settings = {
+    '_id': '5b3e2679d2cbe6974cc6e9c2',
+    'name': 'Settings name',
+    'value': 'The value',
+    'description': {
+        'cn': '设定值的描述。',
+        'en': 'Description of this setting.'
+    }
+    'updated_time': 1529248869.717813,
+    'update_by': 'admin',
+    'created_time': 1529248869.717813
 }
 ```
 

@@ -13,7 +13,7 @@ SETTINGS_HELPER = 'settings_helper'
 
 
 @bp.route('/', methods=['GET'])
-def get_settings():
+def get_settings_list():
     """Fetch settings list
 
     :return: settings list
@@ -26,6 +26,16 @@ def get_settings():
         {'name': 'test1', 'value': 'v3'},
     ]
     return jsonify(data), 200
+
+
+@bp.route('/<name>', methods=['GET'])
+def get_settings(name):
+    """Get specified setting by name.
+
+    :param name: name
+    :return: more information
+    """
+    return name
 
 
 @bp.route('/<name>', methods=['PUT'])

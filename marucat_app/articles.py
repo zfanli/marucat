@@ -23,7 +23,7 @@ def articles_list_fetch():
         - offset: number, fetch start position, 0 by default
         - tags: string or strings array, tags
 
-    :return
+    :return:
         - 200 normally
         - 400 invalid query parameters
         - 404 not found
