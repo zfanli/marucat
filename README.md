@@ -487,6 +487,7 @@ colums = {
 
 ## 相关文档
 
-* [部署 MongoDB 环境（本地环境和服务器环境）](docs/deploy-mongodb.md)
-* [在 Flask 框架创建 REST API 的过程和疏通](docs/create-rest-api.md)
+- [在 Flask 框架创建 REST API 的过程和疏通](docs/create-rest-api.md)
+- [部署 MongoDB 环境（本地环境和服务器环境）](docs/deploy-mongodb.md)
+- [从需求来看 MongoDB （最简用法）](docs/simple-usage-about-mongodb.md)
 
