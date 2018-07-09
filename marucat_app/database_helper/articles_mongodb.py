@@ -100,6 +100,16 @@ class ArticlesConnector(object):
         # edit condition
         condition = {'$match': {'_id': ObjectId(article_id), 'deleted': False}}
 
+        # update views first
+        updated = self._collection.update_one(
+            condition,
+            {'$inc': {'views': 1}}
+        )
+
+        # if no matched article
+        if updated.modified_count == 0:
+            raise NoSuchArticleError('No such article.')
+
         # format
         projection = {
             '$project': {
