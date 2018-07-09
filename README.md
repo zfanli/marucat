@@ -434,6 +434,8 @@ PUT /settings/<items>
 article = {
     # Article ID
     '_id': '5b33af56d2cbe686e00b75c9',
+    # Title
+    'title': 'The article title',
     # Author
     'author': 'AUTHOR',
     # Peek or abstract
