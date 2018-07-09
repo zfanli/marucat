@@ -25,6 +25,7 @@ def get_articles_collection():
 def make_data(peek, content, views, tags, comment, timestamp):
 
     return {
+        'title': 'The article title',
         # Author
         'author': 'Richard',
         # Peek or abstract

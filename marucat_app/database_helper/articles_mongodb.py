@@ -46,6 +46,7 @@ class ArticlesConnector(object):
         projection = {
             '$project': {
                 '_id': 1,
+                'title': 1,
                 'author': 1,
                 'peek': 1,
                 'views': 1,
@@ -103,6 +104,7 @@ class ArticlesConnector(object):
         projection = {
             '$project': {
                 '_id': 1,
+                'title': 1,
                 'author': 1,
                 'content': 1,
                 'views': 1,

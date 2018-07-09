@@ -102,15 +102,15 @@ GET /articles?size=10&offset=0
 ```
 $ curl http://127.0.0.1:5000/articles -i
 HTTP/1.0 200 OK
-next-page: False
 Content-Type: application/json
-Content-Length: 264
+next-page: False
+Content-Length: 300
 Server: Werkzeug/0.14.1 Python/3.6.5
-Date: Fri, 06 Jul 2018 03:01:04 GMT
+Date: Mon, 09 Jul 2018 09:26:43 GMT
 
 [
   {
-    "_id": "5b3de906f047053cf2847176",
+    "_id": "5b432a42f04705565525529d",
     "author": "Richard",
     "deleted": false,
     "peek": "Just a peek at there.",
@@ -120,7 +120,8 @@ Date: Fri, 06 Jul 2018 03:01:04 GMT
       "red",
       "blue"
     ],
-    "timestamp": 1530784006955.605,
+    "timestamp": 1531128386417.8281,
+    "title": "The article title",
     "views": 998
   }
 ]
