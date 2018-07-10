@@ -72,8 +72,10 @@ class ArticlesConnector(object):
         cur = self._collection.aggregate([
             condition,
             projection,
-            {'$limit': size},
-            {'$skip': offset}
+            # skip first
+            {'$skip': offset},
+            # keep order after skip
+            {'$limit': size}
         ])
 
         # convert to list
@@ -269,4 +271,4 @@ class ArticlesConnector(object):
 
         :return: counts of articles
         """
-        return self._collection.find({'deleted': False}).count()
+        return self._collection.count({'deleted': False})

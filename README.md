@@ -455,8 +455,8 @@ article = {
             'aid': '5b33af56d2cbe686e00b75c9',
             # Comment ID
             'cid': '5b3dc242f0470538510b28d7',
-            # Who wrote the comment
-            'from': 'From user',
+            # Username
+            'from': 'Richard',
             # Comment body
             'body': 'Content of comment.',
             # Created or updated timestamp
