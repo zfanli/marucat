@@ -10,6 +10,7 @@ from pymongo import MongoClient
 
 from marucat_app.database_helper.fake_articles_connector import FakeArticlesConnector
 from marucat_app.database_helper.articles_mongodb import ArticlesConnector
+from marucat_app.database_helper.settings_mogodb import SettingsConnector
 from marucat_app.utils.errors import DatabaseNotExistError
 from marucat_app.utils.utils import get_initial_file, get_current_time_in_milliseconds
 
@@ -118,6 +119,13 @@ class Articles(object):
         return self._connector.get_articles_counts()
 
 
+class Settings(object):
+    """For manipulate settings"""
+
+    def __init__(self, settings_connector):
+        self._collection = settings_connector
+
+
 class ConnectorCreator(object):
     """Create connector
 
@@ -157,10 +165,13 @@ class ConnectorCreator(object):
         port = int(mongo_conf['port'])
         schema = mongo_conf['schema']
         logs_collection = mongo_conf['logs_collection']
+
         # if test flag is True set current schema to test schema
         if test_flag:
             schema = mongo_conf['test_schema']
+
         articles_collection = mongo_conf['articles_collection']
+        settings_collection = mongo_conf['settings_collection']
         # initial mongodb connection
         client = MongoClient(url, port)
 
@@ -174,13 +185,26 @@ class ConnectorCreator(object):
         # Articles: SCHEMA/articles
         self._articles = Articles(ArticlesConnector(db[articles_collection]))
         # Settings: SCHEMA/settings
-        self._settings = None
+        self._settings = Settings(SettingsConnector(db[settings_collection]))
 
     @property
     def articles_helper(self):
+        """Get articles helper
+
+        :return: articles helper
+        """
         return self._articles
+
+    @property
+    def settings_helper(self):
+        """Get settings helper
+
+        :return: settings helper
+        """
+        return self._settings
 
 
 if __name__ == '__main__':
-    c = ConnectorCreator('test')
-    getattr(c, 'articles_connector')
+    c = ConnectorCreator('mongodb')
+    assert getattr(c, 'articles_helper')
+    assert getattr(c, 'settings_helper')
