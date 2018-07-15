@@ -12,3 +12,15 @@ class SettingsConnector(object):
         :param collection: collection
         """
         self._collection = collection
+
+    def get_list(self):
+        pass
+
+    def get_one(self, name):
+        pass
+
+    def update_one(self, name, data):
+        pass
+
+    def delete_one(self, name):
+        pass

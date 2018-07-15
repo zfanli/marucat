@@ -125,6 +125,18 @@ class Settings(object):
     def __init__(self, settings_connector):
         self._collection = settings_connector
 
+    def get_list(self):
+        self._collection.get_list()
+
+    def get_one(self, name):
+        self._collection.get_one()
+
+    def update_one(self, name, data):
+        self._collection.update_one()
+
+    def delete_one(self, name):
+        self._collection.delete_one()
+
 
 class ConnectorCreator(object):
     """Create connector
