@@ -123,19 +123,41 @@ class Settings(object):
     """For manipulate settings"""
 
     def __init__(self, settings_connector):
-        self._collection = settings_connector
+        self._connector = settings_connector
 
-    def get_list(self):
-        self._collection.get_list()
+    def get_list(self, *, size, offset):
+        """Get settings list
+
+        :param size: paging size
+        :param offset: skip
+        :return: list of settings
+        """
+        self._connector.get_list(size=size, offset=offset)
 
     def get_one(self, name):
-        self._collection.get_one()
+        """Get specified one of settings
+
+        :param name: name
+        :return: specified one
+        """
+        self._connector.get_one(name)
 
     def update_one(self, name, data):
-        self._collection.update_one()
+        """Update settings
+
+        :param name: name
+        :param data: data
+        :return: updated object
+        """
+        self._connector.update_one(name, data)
 
     def delete_one(self, name):
-        self._collection.delete_one()
+        """Delete specified one of settings
+
+        :param name: name
+        :return: True or False tell you
+        """
+        self._connector.delete_one(name)
 
 
 class ConnectorCreator(object):
