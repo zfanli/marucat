@@ -9,17 +9,31 @@ from bson import ObjectId
 from marucat_app.utils.utils import get_initial_file, get_current_time_in_milliseconds
 
 
-def get_articles_collection():
+def get_connection():
     conf = get_initial_file()
     mongo_conf = conf['mongodb']
     url = mongo_conf['url']
     port = int(mongo_conf['port'])
     schema = mongo_conf['schema']
-    articles_collection = mongo_conf['articles_collection']
-
     mc = MongoClient(url, port)
     db = mc[schema]
-    return db[articles_collection]
+    return db
+
+
+def get_articles_collection(connection):
+    conf = get_initial_file()
+    mongo_conf = conf['mongodb']
+    articles_collection = mongo_conf['articles_collection']
+
+    return connection[articles_collection]
+
+
+def get_settings_collection(connection):
+    conf = get_initial_file()
+    mongo_conf = conf['mongodb']
+    settings_collection = mongo_conf['settings_collection']
+
+    return connection[settings_collection]
 
 
 def make_data(peek, content, views, tags, comment, timestamp):
@@ -63,8 +77,35 @@ def make_comment(aid, cid, body, timestamp, deleted):
     }
 
 
+def make_settings():
+    d = [
+        {
+            'name': 'max_size',
+            'value': 999,
+            'description': {
+                'en': 'Maximum size for once request.'
+            }
+        },
+        {
+            'name': 'default_size',
+            'value': 10,
+            'description': {
+                'en': 'Default size.'
+            }
+        },
+    ]
+
+    for n in d:
+        n['updated_time'] = get_current_time_in_milliseconds()
+        n['created_time'] = get_current_time_in_milliseconds()
+        n['updated_by'] = 'Richard'
+
+    return d
+
+
 if __name__ == '__main__':
-    articles = get_articles_collection()
+    c = get_connection()
+    articles = get_articles_collection(c)
     data = make_data('Just a peek at there.', 'Nothing here',
                      998, ['OK', 'red', 'blue'], None, get_current_time_in_milliseconds())
     articles.delete_many({})
@@ -75,4 +116,8 @@ if __name__ == '__main__':
         get_current_time_in_milliseconds(), False if x % 3 != 1 else True), range(8)))
 
     re = articles.update({'_id': rid.inserted_id}, {'$set': {'comments': comments}})
-    print(re)
+
+    settings = get_settings_collection(c)
+    settings.delete_many({})
+    se = make_settings()
+    settings.insert_many(se)
