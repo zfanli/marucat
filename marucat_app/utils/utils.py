@@ -30,15 +30,6 @@ def get_db_helper(app, name):
     return getattr(c, name)
 
 
-def create_error_message(message='Error was happened.'):
-    """Create a error message dict for JSON
-
-    :param message: error message
-    :return: dict contain a error message
-    """
-    return {'error': message}
-
-
 def create_unimplemented_message(param, method):
     """Message to tell you request is succeed but requested API is unimplemented.
 

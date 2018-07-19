@@ -11,8 +11,9 @@ from marucat_app.database_helper import ConnectorCreator
 from marucat_app.articles import bp as articles
 from marucat_app.settings import bp as settings
 from marucat_app.utils.utils import (
-    create_error_message, CONNECTOR_FACTORY, APP_NAME
+    CONNECTOR_FACTORY, APP_NAME
 )
+from marucat_app.utils.messages import create_error_message
 
 
 # create flask application
