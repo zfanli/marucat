@@ -132,7 +132,7 @@ class Settings(object):
         :param offset: skip
         :return: list of settings
         """
-        self._connector.get_list(size=size, offset=offset)
+        return self._connector.get_list(size=size, offset=offset)
 
     def get_one(self, name):
         """Get specified one of settings
@@ -140,7 +140,7 @@ class Settings(object):
         :param name: name
         :return: specified one
         """
-        self._connector.get_one(name)
+        return self._connector.get_one(name)
 
     def update_one(self, name, data):
         """Update settings
@@ -149,7 +149,7 @@ class Settings(object):
         :param data: data
         :return: updated object
         """
-        self._connector.update_one(name, data)
+        return self._connector.update_one(name, data)
 
     def delete_one(self, name):
         """Delete specified one of settings
@@ -157,7 +157,7 @@ class Settings(object):
         :param name: name
         :return: True or False tell you
         """
-        self._connector.delete_one(name)
+        return self._connector.delete_one(name)
 
 
 class ConnectorCreator(object):

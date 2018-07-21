@@ -5,7 +5,7 @@
 
 from flask import Blueprint, current_app, jsonify, request, make_response
 
-from marucat_app.utils import errors, utils, wrappers, messages
+from marucat_app.utils import errors, utils, wrappers, messages, settings_helper
 
 # handling the url start with '/articles'
 bp = Blueprint('articles', __name__, url_prefix='/articles')
@@ -29,9 +29,14 @@ def articles_list_fetch():
         - 404 not found
     """
 
+    default_size = settings_helper.get_settings('default_size', current_app)
+    max_size = settings_helper.get_settings('max_size', current_app)
+
     # get request parameters
-    size = request.args.get('size', 10)
+    size = request.args.get('size', default_size if default_size else 10)
     offset = request.args.get('offset', 0)
+
+    size = size if size != 0 else max_size
 
     # try to convert parameters to number and do some check
     try:
@@ -87,8 +92,11 @@ def article_content(article_id):
         - 404 not found
     """
 
+    default_size = settings_helper.get_settings('default_size', current_app)
+    max_size = settings_helper.get_settings('max_size', current_app)
+
     # get comments size
-    comments_size = request.args.get('comments_size', 10)
+    comments_size = request.args.get('comments_size', default_size if default_size else 10)
     # convert and check
     try:
         [comments_size] = wrappers.convert_and_check_natural_number(comments_size)
@@ -100,6 +108,9 @@ def article_content(article_id):
         # not a natural number
         error = messages.not_a_natural_number('comments_size')
         return jsonify(error), 400
+
+    # if comments_size is equal to 0 then set it to maximum value
+    comments_size = comments_size if comments_size != 0 else max_size
 
     # check if the article ID contains special characters
     if utils.has_special_characters(article_id):
@@ -149,8 +160,13 @@ def article_comments_fetch(article_id):
         error = messages.no_such_article()
         return jsonify(error), 404
 
-    size = request.args.get('size', 10)
+    default_size = settings_helper.get_settings('default_size', current_app)
+    max_size = settings_helper.get_settings('max_size', current_app)
+
+    size = request.args.get('size', default_size if default_size else 10)
     offset = request.args.get('offset', 0)
+
+    size = size if size != 0 else max_size
 
     # convert to number and checking
     try:
