@@ -36,8 +36,6 @@ def articles_list_fetch():
     size = request.args.get('size', default_size if default_size else 10)
     offset = request.args.get('offset', 0)
 
-    size = size if size != 0 else max_size
-
     # try to convert parameters to number and do some check
     try:
         size, offset = wrappers.convert_and_check_natural_number(size, offset)
@@ -49,6 +47,8 @@ def articles_list_fetch():
         # not a positive number
         error = messages.not_a_natural_number('size/offset')
         return jsonify(error), 400
+
+    size = size if size != 0 else max_size
 
     # get tags from request
     tags = request.args.get('tags')
@@ -166,8 +166,6 @@ def article_comments_fetch(article_id):
     size = request.args.get('size', default_size if default_size else 10)
     offset = request.args.get('offset', 0)
 
-    size = size if size != 0 else max_size
-
     # convert to number and checking
     try:
         size, offset = wrappers.convert_and_check_natural_number(size, offset)
@@ -179,6 +177,8 @@ def article_comments_fetch(article_id):
         # values <= 0
         error = messages.not_a_positive_number('size/offset')
         return jsonify(error), 400
+
+    size = size if size != 0 else max_size
 
     articles_helper = utils.get_db_helper(current_app, ARTICLES_HELPER)
 

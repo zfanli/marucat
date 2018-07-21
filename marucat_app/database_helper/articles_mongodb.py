@@ -65,9 +65,6 @@ class ArticlesConnector(object):
             }
         }
 
-        # check if size is 0 then set it to maximum (limit can not be 0)
-        size = 999 if size == 0 else size
-
         # fetch list
         cur = self._collection.aggregate([
             condition,
@@ -169,9 +166,6 @@ class ArticlesConnector(object):
         :raise: 404 NoSuchArticleError
         :return: array of comments, count
         """
-
-        # check if size is 0 then set it to maximum (limit can not be 0)
-        size = 999 if size == 0 else size
 
         data = self._collection.aggregate([
             # unwind comment array
