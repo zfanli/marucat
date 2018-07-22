@@ -77,7 +77,29 @@ articles
 }
 ```
 
-在一些情况下我们也会用到常规 SQL 中的引用关系。
+使用嵌套的场景：
+
+- 一对一的包含关系，且包含的对象在其他地方没有重复
+- 一对多的包含关系，“多”的一方仅会出现在“一”里，其他地方不会出现重复
+
+嵌套有一些好处：
+
+- 减少客户端的请求次数
+- 减少数据库访问次数
+- 结构更清晰
+
+常规分表的数据模型会造成客户端对相关的数据发出多次请求，或者服务端对于相关联的数据进行多次数据库读写操作，使用嵌套模型则可以一个请求、一次访问取出所有需要的数据，有效减少请求数和数据库读写次数，提高效率。
+
+相应也有一些限制：
+
+- 嵌套最多100层
+- document 容量上限为 16M
+
+对于嵌套层数，无论是出于可读性还是性能考虑我们都不应该设计过于复杂的嵌套，所以100层的限制并不算限制。
+
+文档的容量限制在某些情况下可能是一个严峻的问题，但是对应的我们可以使用 GridFS 文件储存系统来处理这个问题。GridFS 是一个规格用于储存超过 document 的 16M 限制的文件，注意它储存的是二进制文件。这里我们用不到，所以不详细的介绍它。
+
+不过，在一些情况下我们也会用到常规 SQL 中的引用关系。
 
 如果我们想对 `tag` 功能（对文章标注标签）做进一步定制化，例如保存标签的创建者、含义、更新时间等信息。大概是这样的结构。
 
@@ -118,6 +140,29 @@ tags
     'updated_time': 1532269375.632959
 }
 ```
+
+可以参考的文档：
+
+- [Data Model Design](https://docs.mongodb.com/manual/core/data-model-design/)
+- [Model One-to-One Relationships with Embedded Documents](https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-one-relationships-between-documents/#data-modeling-example-one-to-one)
+- [Model One-to-Many Relationships with Embedded Documents](https://docs.mongodb.com/manual/tutorial/model-embedded-one-to-many-relationships-between-documents/)
+- [Model One-to-Many Relationships with Document References](https://docs.mongodb.com/manual/tutorial/model-referenced-one-to-many-relationships-between-documents/)
+
+### 小结
+
+这一部分我们粗略的了解了设计数据模型的模式。
+
+对于一对一或者一对多的包含关系，只要确认包含的对象在其他地方不会存在重复引用，就应该使用嵌套的数据模型。
+
+嵌套模型的好处是可以减少客户端的请求次数，或者服务端的数据库访问次数。
+
+要注意嵌套层数不应该过于复杂，嵌套层数上限是100层，但是一般不用担心这个。
+
+文档的大小限制为 16M，在嵌套数据模型中可能需要注意，一旦有超过这个数字的可能，就应该考虑使用 GridFS 规格以二进制格式储存数据，或者分成多个集合储存数据。
+
+常规的分表的数据模型应该在嵌套模式不适用的情况下使用。
+
+一般这种情况中，被包含的对象会在其他地方重复被使用，所以出于维护和数据安全的考虑，应该将主体和被包含的对象分成连个集合，对 ID 进行引用。
 
 ## document 的增删改查
 
