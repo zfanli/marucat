@@ -4,7 +4,11 @@
 
 从需求来看 MongoDB，了解能满足我们需求的最简用法。
 
-本文介绍如何在 Python 中操作 MongoDB，面向初学者。第一次阅读建议阅读全文，之后建议检索关键字或者根据索引按需阅读。
+本文介绍如何在 Python 中操作 MongoDB，面向初学者。
+
+阅读建议：
+
+首次建议阅读全文。之后建议检索关键字或者根据索引按需阅读。
 
 这一次我们使用 MongoDB 来储存文档，满足一个博客网站可能会遇到的需求。
 
@@ -28,9 +32,92 @@
 - cursor 操作
 - aggregate 聚合
 
-## 设计符合需求的数据结构
+## 设计符合需求的数据模型
 
-<!-- TODO -->
+对于文章和评论的数据关系，在普通的 SQL 数据库中，我们通常设计两张表分别用来存放文章内容和评论内容，然后使用唯一主键来将评论关联到文章上。
+
+```
+articles
+{
+    '_id': ObjectId1,
+    'title': 'The title',
+    'content': 'The content.',
+    ...
+}
+
+comments
+{
+    '_id': ObjectId2,
+    'article_id': ObjectId1,
+    'username': 'Richard',
+    'body': 'The content of comment.'
+    ...
+}
+```
+
+在 MongoDB 中，对于这种明显的一对多的 `包含` 关系，我们使用一种非常规的设计——嵌套。
+
+```
+articles
+{
+    '_id': ObjectId1,
+    'title': 'The title',
+    'content': 'The content.',
+    'comments': [
+        {
+            '_id': ObjectId2,
+            'article_id': ObjectId1,
+            'username': 'Richard',
+            'body': 'The content of comment.'
+            ...
+        }
+        ...
+    ]
+    ...
+}
+```
+
+在一些情况下我们也会用到常规 SQL 中的引用关系。
+
+如果我们想对 `tag` 功能（对文章标注标签）做进一步定制化，例如保存标签的创建者、含义、更新时间等信息。大概是这样的结构。
+
+```
+tags
+{
+    '_id': ObjectId1,
+    'name': 'tags',
+    'description': 'Give the article tags.',
+    'created_by': 'Richard',
+    'updated_time': 1532269375.632959
+}
+```
+
+一篇文章可能有多个标签，而一个标签也可能存在于多篇文章中。
+
+文章作为主体，标签作为它的属性，当这个属性可能在其他文章内重复出现时，一般考虑将文章和标签分为连个集合储存，在文章对象里面引用标签的 id。
+
+```
+articles
+{
+    '_id': ObjectId1,
+    'title': 'The title',
+    'content': 'The content.',
+    'tags': [
+        ObjectId2,
+        ...
+    ]
+    ...
+}
+
+tags
+{
+    '_id': ObjectId2,
+    'name': 'tags',
+    'description': 'Give the article tags.',
+    'created_by': 'Richard',
+    'updated_time': 1532269375.632959
+}
+```
 
 ## document 的增删改查
 
